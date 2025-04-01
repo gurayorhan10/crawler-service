@@ -6,6 +6,7 @@ import com.project.crawlerservice.entity.enums.Currency;
 import com.project.crawlerservice.entity.enums.Type;
 import com.project.crawlerservice.service.DataService;
 import com.project.crawlerservice.service.ExchangeRateService;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -26,13 +27,18 @@ import java.util.List;
 @Component
 public class ExchangeRateCrawlerBatch {
 
-    private static final String WEB_SITE = "https://www.denizbank.com";
+    @PostConstruct
+    void init(){
+        exchangeRate();
+    }
+
+    private static final String WEB_SITE = "http://www.denizbank.com";
 
     @Autowired
     private ExchangeRateService exchangeRateService;
 
     @Scheduled(cron = "0 */5 * * * *")
-    public void fund(){
+    public void exchangeRate(){
         log.info("Started exchange rate crawler.");
         try {
             List<String> codes = new ArrayList<>();
