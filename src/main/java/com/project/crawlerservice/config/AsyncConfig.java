@@ -7,6 +7,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.Executor;
+import java.util.concurrent.ThreadPoolExecutor;
 
 @EnableAsync
 @Configuration
@@ -16,9 +17,12 @@ public class AsyncConfig {
     @Bean(name = "threadPoolTaskExecutor")
     public Executor threadPoolTaskExecutor() {
         ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
-        taskExecutor.setCorePoolSize(5); // Number of concurrent threads
-        taskExecutor.setMaxPoolSize(20); // Max pool size
-        taskExecutor.setQueueCapacity(100);
+        taskExecutor.setCorePoolSize(10);
+        taskExecutor.setMaxPoolSize(20);
+        taskExecutor.setQueueCapacity(5);
+        taskExecutor.setKeepAliveSeconds(300);
+        taskExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+        taskExecutor.setAllowCoreThreadTimeOut(true);
         taskExecutor.initialize();
         return taskExecutor;
     }
