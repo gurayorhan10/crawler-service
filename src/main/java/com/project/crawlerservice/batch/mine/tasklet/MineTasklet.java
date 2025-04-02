@@ -39,12 +39,13 @@ public class MineTasklet implements Tasklet {
             Document document = Jsoup.connect(WEB_SITE + "/yatirim-araclari/altin-fiyatlari").get();
             Elements tbody = document.getElementsByClass("odd:bg-white even:bg-purple-100");
             for (Element element : tbody) {
-                Elements td = element.getElementsByTag("td");
-                String code = getKey(td.get(0).getElementsByTag("span").get(0).childNodes().get(0).toString().toUpperCase().trim());
-                String name = td.get(0).getElementsByTag("span").get(0).childNodes().get(0).toString();
-                BigDecimal buy = new BigDecimal(td.get(1).getElementsByTag("span").get(0).childNodes().get(0).toString().trim().replace(".","").replace(",",".")).setScale(5, RoundingMode.HALF_UP);
-                BigDecimal sell = new BigDecimal(td.get(2).getElementsByTag("span").get(0).childNodes().get(0).toString().trim().replace(".","").replace(",",".")).setScale(5, RoundingMode.HALF_UP);
+                String code = "";
                 try{
+                    Elements td = element.getElementsByTag("td");
+                    code = getKey(td.get(0).getElementsByTag("span").get(0).childNodes().get(0).toString().toUpperCase().trim());
+                    String name = td.get(0).getElementsByTag("span").get(0).childNodes().get(0).toString();
+                    BigDecimal buy = new BigDecimal(td.get(1).getElementsByTag("span").get(0).childNodes().get(0).toString().trim().replace(".","").replace(",",".")).setScale(5, RoundingMode.HALF_UP);
+                    BigDecimal sell = new BigDecimal(td.get(2).getElementsByTag("span").get(0).childNodes().get(0).toString().trim().replace(".","").replace(",",".")).setScale(5, RoundingMode.HALF_UP);
                     BigDecimal divide = (buy.add(sell)).divide(BigDecimal.valueOf(2), 5, RoundingMode.HALF_UP);
                     if(!code.equals("GRAM_GUMUS")){
                         dataDTOList.add(new DataDTO(code,name.trim(), Type.GOLD, divide,Currency.TL,Boolean.TRUE,new Date()));
@@ -54,7 +55,7 @@ public class MineTasklet implements Tasklet {
                         codes.add(code);
                     }
                 }catch (Exception e){
-                    log.error("Mine not exist: " + code);
+                    log.error("Mine " + code + " parse error: " + e.getLocalizedMessage());
                 }
             }
             if(!CollectionUtils.isEmpty(dataDTOList)){

@@ -51,8 +51,8 @@ public class CoinTasklet implements Tasklet {
                     String code = "";
                     String name = "";
                     BigDecimal value = BigDecimal.ZERO;
-                    Elements td = tr.get(j).getElementsByTag("td");
                     try{
+                        Elements td = tr.get(j).getElementsByTag("td");
                         if(j < 10){
                             code = td.get(2).getElementsByClass("coin-item-symbol").get(0).childNodes().get(0).toString();
                             name = td.get(2).getElementsByClass("coin-item-name").get(0).childNodes().get(0).toString();
