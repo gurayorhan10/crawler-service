@@ -54,18 +54,22 @@ public class CoinCrawlerBatch {
                 List<DataDTO> dataDTOList = new ArrayList<>();
                 for (int j = 0; j < tr.size(); j++) {
                     size++;
-                    String code;
-                    String name;
-                    BigDecimal value;
+                    String code = "";
+                    String name = "";
+                    BigDecimal value = BigDecimal.ZERO;
                     Elements td = tr.get(j).getElementsByTag("td");
-                    if(j < 10){
-                        code = td.get(2).getElementsByClass("coin-item-symbol").get(0).childNodes().get(0).toString();
-                        name = td.get(2).getElementsByClass("coin-item-name").get(0).childNodes().get(0).toString();
-                        value = new BigDecimal(td.get(3).getElementsByTag("span").get(0).childNodes().get(0).toString().trim().replace("$", "").replace(",", "")).setScale(5, RoundingMode.HALF_UP);
-                    }else{
-                        code = td.get(2).getElementsByTag("span").get(2).childNodes().get(0).toString();
-                        name = td.get(2).getElementsByTag("span").get(1).childNodes().get(0).toString();
-                        value = new BigDecimal(td.get(3).childNodes().get(2).toString().trim().replace(",", "")).setScale(5, RoundingMode.HALF_UP);
+                    try{
+                        if(j < 10){
+                            code = td.get(2).getElementsByClass("coin-item-symbol").get(0).childNodes().get(0).toString();
+                            name = td.get(2).getElementsByClass("coin-item-name").get(0).childNodes().get(0).toString();
+                            value = new BigDecimal(td.get(3).getElementsByTag("span").get(0).childNodes().get(0).toString().trim().replace("$", "").replace(",", "")).setScale(5, RoundingMode.HALF_UP);
+                        }else{
+                            code = td.get(2).getElementsByTag("span").get(2).childNodes().get(0).toString();
+                            name = td.get(2).getElementsByTag("span").get(1).childNodes().get(0).toString();
+                            value = new BigDecimal(td.get(3).childNodes().get(2).toString().trim().replace(",", "")).setScale(5, RoundingMode.HALF_UP);
+                        }
+                    }catch (Exception e){
+                        log.error("Page " + i + " coin error: " + code);
                     }
                     if(!codeListCheck.contains(code.toUpperCase().trim()) && value.compareTo(BigDecimal.ZERO.setScale(5, RoundingMode.HALF_UP)) > 0){
                         dataDTOList.add(new DataDTO(code.toUpperCase().trim(),name.trim(),Type.COIN,value,Currency.USD,Boolean.TRUE,new Date()));
