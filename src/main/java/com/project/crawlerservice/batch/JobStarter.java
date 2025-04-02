@@ -8,7 +8,6 @@ import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -23,7 +22,6 @@ public class JobStarter {
     @Autowired
     private ApplicationContext applicationContext;
 
-    @Async("threadPoolTaskExecutor")
     public void run(String name){
         try {
             log.info("Batch " + name + " is starting...");
