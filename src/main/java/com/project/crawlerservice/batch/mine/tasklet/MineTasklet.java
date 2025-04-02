@@ -1,18 +1,19 @@
-package com.project.crawlerservice.scheduled;
+package com.project.crawlerservice.batch.mine.tasklet;
 
 import com.project.crawlerservice.dto.DataDTO;
 import com.project.crawlerservice.entity.enums.Currency;
 import com.project.crawlerservice.entity.enums.Type;
 import com.project.crawlerservice.service.DataService;
-import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.batch.core.StepContribution;
+import org.springframework.batch.core.scope.context.ChunkContext;
+import org.springframework.batch.core.step.tasklet.Tasklet;
+import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
@@ -23,22 +24,15 @@ import java.util.List;
 import java.util.Locale;
 
 @Slf4j
-@Component
-public class MineCrawlerBatch {
-
-    @PostConstruct
-    void init(){
-        gold();
-    }
+public class MineTasklet implements Tasklet {
 
     private static final String WEB_SITE = "https://www.hangikredi.com";
 
     @Autowired
     private DataService dataService;
 
-    @Scheduled(cron = "0 */5 * * * *")
-    public void gold(){
-        log.info("Started mine crawler.");
+    @Override
+    public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext){
         try {
             List<String> codes = new ArrayList<>();
             List<DataDTO> dataDTOList = new ArrayList<>();
@@ -70,7 +64,7 @@ public class MineCrawlerBatch {
         }catch (Exception e){
             log.error("Mine page error: " + e.getLocalizedMessage());
         }
-        log.info("Ended mine crawler.");
+        return RepeatStatus.FINISHED;
     }
 
     public static String getKey(String str){

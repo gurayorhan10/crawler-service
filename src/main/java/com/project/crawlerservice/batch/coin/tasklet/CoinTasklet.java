@@ -1,17 +1,18 @@
-package com.project.crawlerservice.scheduled;
+package com.project.crawlerservice.batch.coin.tasklet;
 
 import com.project.crawlerservice.dto.DataDTO;
 import com.project.crawlerservice.entity.enums.Currency;
 import com.project.crawlerservice.entity.enums.Type;
 import com.project.crawlerservice.service.DataService;
-import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.springframework.batch.core.StepContribution;
+import org.springframework.batch.core.scope.context.ChunkContext;
+import org.springframework.batch.core.step.tasklet.Tasklet;
+import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
@@ -21,13 +22,7 @@ import java.util.Date;
 import java.util.List;
 
 @Slf4j
-@Component
-public class CoinCrawlerBatch {
-
-    @PostConstruct
-    void init(){
-        coin();
-    }
+public class CoinTasklet implements Tasklet {
 
     private static final Integer DATA_SIZE = 250;
     private static final Integer LAST_PAGE = 3;
@@ -36,9 +31,8 @@ public class CoinCrawlerBatch {
     @Autowired
     private DataService dataService;
 
-    @Scheduled(cron = "0 */1 * * * *")
-    public void coin(){
-        log.info("Started coin crawler.");
+    @Override
+    public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
         int i = 0;
         int size = 0;
         List<String> codeListCheck = new ArrayList<>();
@@ -72,7 +66,7 @@ public class CoinCrawlerBatch {
                         log.error("Page " + i + " coin error: " + code);
                     }
                     if(!codeListCheck.contains(code.toUpperCase().trim()) && value.compareTo(BigDecimal.ZERO.setScale(5, RoundingMode.HALF_UP)) > 0){
-                        dataDTOList.add(new DataDTO(code.toUpperCase().trim(),name.trim(),Type.COIN,value,Currency.USD,Boolean.TRUE,new Date()));
+                        dataDTOList.add(new DataDTO(code.toUpperCase().trim(),name.trim(), Type.COIN,value, Currency.USD,Boolean.TRUE,new Date()));
                         codeListCheck.add(code.toUpperCase().trim());
                         codes.add(code.toUpperCase().trim());
                     }
@@ -89,7 +83,7 @@ public class CoinCrawlerBatch {
             }
             log.debug("Coin page " + i + " ended.");
         }while (i <= LAST_PAGE && size <= DATA_SIZE);
-        log.info("Ended coin crawler.");
+        return RepeatStatus.FINISHED;
     }
 
 }

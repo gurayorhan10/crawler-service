@@ -1,18 +1,19 @@
-package com.project.crawlerservice.scheduled;
+package com.project.crawlerservice.batch.stock.tasklet;
 
 import com.project.crawlerservice.dto.DataDTO;
 import com.project.crawlerservice.entity.enums.Currency;
 import com.project.crawlerservice.entity.enums.Type;
 import com.project.crawlerservice.service.DataService;
-import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.batch.core.StepContribution;
+import org.springframework.batch.core.scope.context.ChunkContext;
+import org.springframework.batch.core.step.tasklet.Tasklet;
+import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
@@ -22,13 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 @Slf4j
-@Component
-public class StockCrawlerBatch {
-
-    @PostConstruct
-    void init(){
-        stock();
-    }
+public class StockTasklet implements Tasklet {
 
     private static final Integer LAST_PAGE = 31;
     private static final String WEB_SITE = "http://www.bloomberght.com";
@@ -36,9 +31,8 @@ public class StockCrawlerBatch {
     @Autowired
     private DataService dataService;
 
-    @Scheduled(cron = "0 */5 9-18 * * 1-5")
-    public void stock(){
-        log.info("Started stock crawler.");
+    @Override
+    public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
         int i = 1;
         do {
             log.debug("Stock page " + i + " searching...");
@@ -66,7 +60,7 @@ public class StockCrawlerBatch {
             log.debug("Stock page " + i + " ended.");
             i++;
         }while (i <= LAST_PAGE);
-        log.info("Ended stock crawler.");
+        return RepeatStatus.FINISHED;
     }
 
 }
