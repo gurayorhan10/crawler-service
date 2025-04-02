@@ -1,20 +1,18 @@
-package com.project.crawlerservice.scheduled;
+package com.project.crawlerservice.batch.exchangerate.tasklet;
 
-import com.project.crawlerservice.dto.DataDTO;
 import com.project.crawlerservice.dto.ExchangeRateDTO;
 import com.project.crawlerservice.entity.enums.Currency;
-import com.project.crawlerservice.entity.enums.Type;
-import com.project.crawlerservice.service.DataService;
 import com.project.crawlerservice.service.ExchangeRateService;
-import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.batch.core.StepContribution;
+import org.springframework.batch.core.scope.context.ChunkContext;
+import org.springframework.batch.core.step.tasklet.Tasklet;
+import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
@@ -24,22 +22,15 @@ import java.util.Date;
 import java.util.List;
 
 @Slf4j
-@Component
-public class ExchangeRateCrawlerBatch {
-
-    @PostConstruct
-    void init(){
-        exchangeRate();
-    }
+public class ExchangeRateTasklet implements Tasklet {
 
     private static final String WEB_SITE = "http://www.denizbank.com";
 
     @Autowired
     private ExchangeRateService exchangeRateService;
 
-    @Scheduled(cron = "0 */5 * * * *")
-    public void exchangeRate(){
-        log.info("Started exchange rate crawler.");
+    @Override
+    public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
         try {
             List<String> codes = new ArrayList<>();
             List<ExchangeRateDTO> exchangeRateDTOList = new ArrayList<>();
@@ -68,7 +59,7 @@ public class ExchangeRateCrawlerBatch {
         }catch (Exception e){
             log.error("Exchange rate page error: " + e.getLocalizedMessage());
         }
-        log.info("Ended exchange rate crawler.");
+        return RepeatStatus.FINISHED;
     }
 
 }
