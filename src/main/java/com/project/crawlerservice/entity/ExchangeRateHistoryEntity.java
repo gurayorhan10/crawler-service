@@ -24,9 +24,9 @@ public class ExchangeRateHistoryEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "CURRENCY", nullable = false)
     private Currency currency;
-    @Column(name = "BUY", nullable = false, precision = 5, scale = 5)
+    @Column(name = "BUY", nullable = false, precision = 12, scale = 5)
     private BigDecimal buy;
-    @Column(name = "SELL", nullable = false, precision = 5, scale = 5)
+    @Column(name = "SELL", nullable = false, precision = 12, scale = 5)
     private BigDecimal sell;
     @Column(name = "INSERT_DATE", nullable = false)
     private Date insertDate;

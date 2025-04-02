@@ -24,17 +24,12 @@
 		<dependency>
 			<groupId>org.jsoup</groupId>
 			<artifactId>jsoup</artifactId>
-			<version>1.17.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springdoc</groupId>
-			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-			<version>2.3.0</version>
+			<version>1.18.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
-			<version>2.10.1</version>
+			<version>2.10</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -123,4 +118,11 @@
 			</plugin>
 		</plugins>
 	</build>
+	<repositories>
+		<repository>
+			<id>maven_central</id>
+			<name>Maven Central</name>
+			<url>https://repo.maven.apache.org/maven2/</url>
+		</repository>
+	</repositories>
 </project>

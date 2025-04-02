@@ -4,6 +4,7 @@ import com.project.crawlerservice.dto.DataDTO;
 import com.project.crawlerservice.entity.enums.Currency;
 import com.project.crawlerservice.entity.enums.Type;
 import com.project.crawlerservice.service.DataService;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -23,6 +24,11 @@ import java.util.List;
 @Slf4j
 @Component
 public class FundCrawlerBatch {
+
+    @PostConstruct
+    void init(){
+        fund();
+    }
 
     private static final String WEB_SITE = "http://www.bloomberght.com";
 

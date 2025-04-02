@@ -4,6 +4,7 @@ import com.project.crawlerservice.dto.DataDTO;
 import com.project.crawlerservice.entity.enums.Currency;
 import com.project.crawlerservice.entity.enums.Type;
 import com.project.crawlerservice.service.DataService;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -23,9 +24,14 @@ import java.util.List;
 @Component
 public class CoinCrawlerBatch {
 
+    @PostConstruct
+    void init(){
+        coin();
+    }
+
     private static final Integer DATA_SIZE = 250;
     private static final Integer LAST_PAGE = 3;
-    private static final String WEB_SITE = "https://coinmarketcap.com";
+    private static final String WEB_SITE = "http://coinmarketcap.com";
 
     @Autowired
     private DataService dataService;
@@ -35,6 +41,7 @@ public class CoinCrawlerBatch {
         log.info("Started coin crawler.");
         int i = 0;
         int size = 0;
+        List<String> codeListCheck = new ArrayList<>();
         do {
             log.debug("Coin page " + i + " searching...");
             try {
@@ -60,9 +67,12 @@ public class CoinCrawlerBatch {
                         name = td.get(2).getElementsByTag("span").get(1).childNodes().get(0).toString();
                         value = new BigDecimal(td.get(3).childNodes().get(2).toString().trim().replace(",", "")).setScale(5, RoundingMode.HALF_UP);
                     }
-                    dataDTOList.add(new DataDTO(code.toUpperCase().trim(),name.trim(),Type.COIN,value,Currency.USD,Boolean.TRUE,new Date()));
-                    codes.add(code.trim());
-                    if(size >= DATA_SIZE){
+                    if(!codeListCheck.contains(code.toUpperCase().trim()) && value.compareTo(BigDecimal.ZERO.setScale(5, RoundingMode.HALF_UP)) > 0){
+                        dataDTOList.add(new DataDTO(code.toUpperCase().trim(),name.trim(),Type.COIN,value,Currency.USD,Boolean.TRUE,new Date()));
+                        codeListCheck.add(code.toUpperCase().trim());
+                        codes.add(code.toUpperCase().trim());
+                    }
+                    if(codeListCheck.size() >= DATA_SIZE){
                         break;
                     }
                 }
