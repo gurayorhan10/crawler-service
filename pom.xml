@@ -15,7 +15,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>17</java.version>
-		<spring-cloud.version>2022.0.4</spring-cloud.version>
+		<spring-cloud.version>2024.0.0</spring-cloud.version>
 		<org.yaml.version>2.3</org.yaml.version>
 		<org.modelmapper.version>3.1.1</org.modelmapper.version>
 	</properties>
