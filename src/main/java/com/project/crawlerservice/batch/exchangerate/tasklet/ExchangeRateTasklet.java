@@ -40,12 +40,12 @@ public class ExchangeRateTasklet implements Tasklet {
             Elements tbody = document.getElementsByClass("render-list");
             Elements tr = tbody.get(0).getElementsByTag("tr");
             for (Element element : tr) {
-                Elements td = element.getElementsByTag("td");
-                String code = td.get(0).getElementsByClass("title flex-row d-flex align-items-center").get(0).getElementsByTag("b").get(0).childNodes().get(0).toString();
-                String name = td.get(0).getElementsByClass("name").get(0).childNodes().get(0).toString().trim();
-                BigDecimal buy = new BigDecimal(td.get(1).getElementsByTag("span").get(0).childNodes().get(0).toString().trim().replace(",", "")).setScale(5, RoundingMode.HALF_UP);
-                BigDecimal sell = new BigDecimal(td.get(2).getElementsByTag("span").get(0).childNodes().get(0).toString().trim().replace(",", "")).setScale(5, RoundingMode.HALF_UP);
-                try{
+                String code = "";
+                try{ Elements td = element.getElementsByTag("td");
+                    code = td.get(0).getElementsByClass("title flex-row d-flex align-items-center").get(0).getElementsByTag("b").get(0).childNodes().get(0).toString();
+                    String name = td.get(0).getElementsByClass("name").get(0).childNodes().get(0).toString().trim();
+                    BigDecimal buy = new BigDecimal(td.get(1).getElementsByTag("span").get(0).childNodes().get(0).toString().trim().replace(",", "")).setScale(5, RoundingMode.HALF_UP);
+                    BigDecimal sell = new BigDecimal(td.get(2).getElementsByTag("span").get(0).childNodes().get(0).toString().trim().replace(",", "")).setScale(5, RoundingMode.HALF_UP);
                     exchangeRateDTOList.add(new ExchangeRateDTO(Currency.valueOf(code.trim()),name.trim(),buy,sell,new Date()));
                     codes.add(code.trim());
                 }catch (Exception e){

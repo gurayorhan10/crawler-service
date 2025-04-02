@@ -39,12 +39,17 @@ public class FundTasklet implements Tasklet {
             Elements tr = tbody.get(0).getElementsByTag("tr");
             List<DataDTO> dataDTOList = new ArrayList<>();
             for (Element element : tr) {
-                Elements td = element.getElementsByTag("td");
-                String code = td.get(0).getElementsByClass("font-bold").get(0).childNodes().get(0).toString();
-                String name = td.get(1).getElementsByTag("a").get(0).childNodes().get(0).toString();
-                BigDecimal value = new BigDecimal(td.get(2).getElementsByTag("a").get(0).childNodes().get(0).toString().trim().replace(",", ".")).setScale(5, RoundingMode.HALF_UP);
-                dataDTOList.add(new DataDTO(code.toUpperCase().trim(),name.trim(),Type.FUND,value,Currency.TL,Boolean.TRUE,new Date()));
-                codes.add(code.trim());
+                String code = "";
+                try {
+                    Elements td = element.getElementsByTag("td");
+                    code = td.get(0).getElementsByClass("font-bold").get(0).childNodes().get(0).toString().trim();
+                    String name = td.get(1).getElementsByTag("a").get(0).childNodes().get(0).toString().trim();
+                    BigDecimal value = new BigDecimal(td.get(2).getElementsByTag("a").get(0).childNodes().get(0).toString().trim().replace(",", ".")).setScale(5, RoundingMode.HALF_UP);
+                    dataDTOList.add(new DataDTO(code.toUpperCase().trim(),name.trim(),Type.FUND,value,Currency.TL,Boolean.TRUE,new Date()));
+                    codes.add(code.trim());
+                }catch (Exception e){
+                    log.error("Fund " + code + " parse error: " + e.getLocalizedMessage());
+                }
             }
             if(!CollectionUtils.isEmpty(dataDTOList)){
                 log.debug("Fund list: " + codes);
