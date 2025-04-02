@@ -1,3 +1,6 @@
 spring:
   application:
     name: crawler-service
+  batch:
+    jdbc:
+      initialize-schema: always
