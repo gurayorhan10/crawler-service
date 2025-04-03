@@ -1,6 +1,5 @@
 package com.project.crawlerservice.batch;
 
-import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -12,15 +11,6 @@ public class JobScheduled {
 
     @Autowired
     private JobStarter job;
-
-    @PostConstruct
-    void init(){
-        job.run("coin");
-        job.run("fund");
-        job.run("mine");
-        job.run("stock");
-        job.run("exchangeRate");
-    }
 
     @Scheduled(cron = "0 */1 * * * *")
     public void coinScheduled(){
