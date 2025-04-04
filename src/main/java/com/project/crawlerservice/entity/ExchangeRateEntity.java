@@ -1,7 +1,6 @@
 package com.project.crawlerservice.entity;
 
-import com.project.crawlerservice.entity.embeddables.DataEmbeddableId;
-import com.project.crawlerservice.entity.enums.Currency;
+import com.project.crawlerservice.enums.Currency;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

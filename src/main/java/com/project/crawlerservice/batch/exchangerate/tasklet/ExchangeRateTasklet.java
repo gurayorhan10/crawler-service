@@ -1,7 +1,10 @@
 package com.project.crawlerservice.batch.exchangerate.tasklet;
 
+import com.project.crawlerservice.dto.DataDTO;
 import com.project.crawlerservice.dto.ExchangeRateDTO;
-import com.project.crawlerservice.entity.enums.Currency;
+import com.project.crawlerservice.enums.Currency;
+import com.project.crawlerservice.enums.Type;
+import com.project.crawlerservice.service.DataService;
 import com.project.crawlerservice.service.ExchangeRateService;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
@@ -27,12 +30,16 @@ public class ExchangeRateTasklet implements Tasklet {
     private static final String WEB_SITE = "http://www.denizbank.com";
 
     @Autowired
+    private DataService dataService;
+
+    @Autowired
     private ExchangeRateService exchangeRateService;
 
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
         try {
             List<String> codes = new ArrayList<>();
+            List<DataDTO> dataDTOList = new ArrayList<>();
             List<ExchangeRateDTO> exchangeRateDTOList = new ArrayList<>();
             exchangeRateDTOList.add(new ExchangeRateDTO(Currency.TL,"Türk Lirası",BigDecimal.ONE,BigDecimal.ONE,new Date()));
             codes.add(Currency.TL.name());
@@ -46,7 +53,9 @@ public class ExchangeRateTasklet implements Tasklet {
                     String name = td.get(0).getElementsByClass("name").get(0).childNodes().get(0).toString().trim();
                     BigDecimal buy = new BigDecimal(td.get(1).getElementsByTag("span").get(0).childNodes().get(0).toString().trim().replace(",", "")).setScale(5, RoundingMode.HALF_UP);
                     BigDecimal sell = new BigDecimal(td.get(2).getElementsByTag("span").get(0).childNodes().get(0).toString().trim().replace(",", "")).setScale(5, RoundingMode.HALF_UP);
+                    BigDecimal divide = (buy.add(sell)).divide(BigDecimal.valueOf(2), 5, RoundingMode.HALF_UP);
                     exchangeRateDTOList.add(new ExchangeRateDTO(Currency.valueOf(code.trim()),name.trim(),buy,sell,new Date()));
+                    dataDTOList.add(new DataDTO(Type.MONEY.name(),name.trim(),Type.MONEY,divide,Currency.valueOf(code.trim()),Boolean.TRUE,new Date()));
                     codes.add(code.trim());
                 }catch (Exception e){
                     log.error("Exchange rate not exist: " + code.trim());
@@ -55,6 +64,7 @@ public class ExchangeRateTasklet implements Tasklet {
             if(!CollectionUtils.isEmpty(exchangeRateDTOList)){
                 log.debug("Exchange rate list: " + codes);
                 exchangeRateService.save(exchangeRateDTOList);
+                dataService.save(dataDTOList);
             }
         }catch (Exception e){
             log.error("Exchange rate page error: " + e.getLocalizedMessage());

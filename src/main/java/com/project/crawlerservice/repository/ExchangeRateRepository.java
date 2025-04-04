@@ -1,7 +1,7 @@
 package com.project.crawlerservice.repository;
 
 import com.project.crawlerservice.entity.ExchangeRateEntity;
-import com.project.crawlerservice.entity.enums.Type;
+import com.project.crawlerservice.enums.Type;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
