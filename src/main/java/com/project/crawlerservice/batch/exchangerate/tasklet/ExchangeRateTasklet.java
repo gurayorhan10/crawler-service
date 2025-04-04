@@ -55,7 +55,7 @@ public class ExchangeRateTasklet implements Tasklet {
                     BigDecimal sell = new BigDecimal(td.get(2).getElementsByTag("span").get(0).childNodes().get(0).toString().trim().replace(",", "")).setScale(5, RoundingMode.HALF_UP);
                     BigDecimal divide = (buy.add(sell)).divide(BigDecimal.valueOf(2), 5, RoundingMode.HALF_UP);
                     exchangeRateDTOList.add(new ExchangeRateDTO(Currency.valueOf(code.trim()),name.trim(),buy,sell,new Date()));
-                    dataDTOList.add(new DataDTO(Type.MONEY.name(),name.trim(),Type.MONEY,divide,Currency.valueOf(code.trim()),Boolean.TRUE,new Date()));
+                    dataDTOList.add(new DataDTO(Currency.valueOf(code.trim()).name(),name.trim(),Type.MONEY,divide,Currency.valueOf(code.trim()),Boolean.TRUE,new Date()));
                     codes.add(code.trim());
                 }catch (Exception e){
                     log.error("Exchange rate not exist: " + code.trim());
