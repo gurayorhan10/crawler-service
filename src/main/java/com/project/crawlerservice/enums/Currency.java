@@ -1,4 +1,4 @@
-package com.project.crawlerservice.entity.enums;
+package com.project.crawlerservice.enums;
 
 public enum Currency {
     TL,

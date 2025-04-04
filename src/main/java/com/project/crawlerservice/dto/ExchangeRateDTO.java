@@ -1,6 +1,6 @@
 package com.project.crawlerservice.dto;
 
-import com.project.crawlerservice.entity.enums.Currency;
+import com.project.crawlerservice.enums.Currency;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

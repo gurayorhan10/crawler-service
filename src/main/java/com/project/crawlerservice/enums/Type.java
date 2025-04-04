@@ -1,6 +1,7 @@
-package com.project.crawlerservice.entity.enums;
+package com.project.crawlerservice.enums;
 
 public enum Type {
+    MONEY,
     STOCK,
     FUND,
     GOLD,

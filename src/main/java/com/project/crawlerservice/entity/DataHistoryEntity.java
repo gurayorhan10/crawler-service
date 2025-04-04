@@ -1,6 +1,6 @@
 package com.project.crawlerservice.entity;
 
-import com.project.crawlerservice.entity.enums.Type;
+import com.project.crawlerservice.enums.Type;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

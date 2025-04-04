@@ -1,8 +1,8 @@
 package com.project.crawlerservice.batch.fund.tasklet;
 
 import com.project.crawlerservice.dto.DataDTO;
-import com.project.crawlerservice.entity.enums.Currency;
-import com.project.crawlerservice.entity.enums.Type;
+import com.project.crawlerservice.enums.Currency;
+import com.project.crawlerservice.enums.Type;
 import com.project.crawlerservice.service.DataService;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;

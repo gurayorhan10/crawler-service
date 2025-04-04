@@ -1,6 +1,6 @@
-package com.project.crawlerservice.entity.embeddables;
+package com.project.crawlerservice.entity.embeddable;
 
-import com.project.crawlerservice.entity.enums.Type;
+import com.project.crawlerservice.enums.Type;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.EnumType;
