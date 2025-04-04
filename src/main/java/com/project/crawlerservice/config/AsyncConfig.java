@@ -14,8 +14,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 @ComponentScan("com.project")
 public class AsyncConfig {
 
-    @Bean(name = "threadPoolTaskExecutor")
-    public Executor threadPoolTaskExecutor() {
+    @Bean(name = "threadPoolScheduled")
+    public Executor threadPoolScheduled() {
         ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
         taskExecutor.setCorePoolSize(10);
         taskExecutor.setMaxPoolSize(20);
