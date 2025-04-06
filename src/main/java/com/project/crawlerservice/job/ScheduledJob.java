@@ -13,14 +13,14 @@ public class ScheduledJob {
     @Autowired
     private StarterJob job;
 
-    @PostConstruct
-    void init(){
-        job.run("dailyAssetChange");
-    }
-
-    @Scheduled(cron = "0 10 0 * * *")
+    @Scheduled(cron = "0 5 0 * * *")
     public void interestCalculationScheduled(){
         job.run("interestCalculation");
+    }
+
+    @Scheduled(cron = "0 15 0 * * *")
+    public void dailyAssetChangeScheduled(){
+        job.run("dailyAssetChange");
     }
 
     @Scheduled(cron = "0 */2 * * * *")
