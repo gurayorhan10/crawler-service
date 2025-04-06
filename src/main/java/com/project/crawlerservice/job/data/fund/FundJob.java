@@ -1,7 +1,7 @@
-package com.project.crawlerservice.job.fund;
+package com.project.crawlerservice.job.data.fund;
 
 import com.project.crawlerservice.job.BaseJob;
-import com.project.crawlerservice.job.fund.tasklet.FundTasklet;
+import com.project.crawlerservice.job.data.fund.tasklet.FundTasklet;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
