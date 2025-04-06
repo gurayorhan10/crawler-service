@@ -1,6 +1,6 @@
-package com.project.crawlerservice.job.coin;
+package com.project.crawlerservice.job.data.coin;
 
-import com.project.crawlerservice.job.coin.tasklet.CoinTasklet;
+import com.project.crawlerservice.job.data.coin.tasklet.CoinTasklet;
 import com.project.crawlerservice.job.BaseJob;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;

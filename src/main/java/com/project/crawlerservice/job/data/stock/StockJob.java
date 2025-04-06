@@ -1,7 +1,7 @@
-package com.project.crawlerservice.job.stock;
+package com.project.crawlerservice.job.data.stock;
 
 import com.project.crawlerservice.job.BaseJob;
-import com.project.crawlerservice.job.stock.tasklet.StockTasklet;
+import com.project.crawlerservice.job.data.stock.tasklet.StockTasklet;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;

@@ -28,6 +28,8 @@ public class DataDTO {
     @JsonProperty
     private BigDecimal value;
     @JsonProperty
+    private BigDecimal dailyValue;
+    @JsonProperty
     private Currency currency;
     @JsonProperty
     private Boolean active;

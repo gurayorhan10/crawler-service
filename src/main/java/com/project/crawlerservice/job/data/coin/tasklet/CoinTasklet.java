@@ -1,4 +1,4 @@
-package com.project.crawlerservice.job.coin.tasklet;
+package com.project.crawlerservice.job.data.coin.tasklet;
 
 import com.project.crawlerservice.dto.DataDTO;
 import com.project.crawlerservice.enums.Currency;
@@ -66,7 +66,7 @@ public class CoinTasklet implements Tasklet {
                         log.error("Page " + i + " coin error: " + code);
                     }
                     if(!codeListCheck.contains(code.toUpperCase().trim()) && value.compareTo(BigDecimal.ZERO.setScale(5, RoundingMode.HALF_UP)) > 0){
-                        dataDTOList.add(new DataDTO(code.toUpperCase().trim(),name.trim(), Type.COIN,value, Currency.USD,Boolean.TRUE,new Date()));
+                        dataDTOList.add(new DataDTO(code.toUpperCase().trim(),name.trim(), Type.COIN,value,value,Currency.USD,Boolean.TRUE,new Date()));
                         codeListCheck.add(code.toUpperCase().trim());
                         codes.add(code.toUpperCase().trim());
                     }
@@ -76,7 +76,7 @@ public class CoinTasklet implements Tasklet {
                 }
                 if(!CollectionUtils.isEmpty(dataDTOList)){
                     log.debug("Page " + i + " coin list: " + codes);
-                    dataService.save(dataDTOList);
+                    dataService.save(Type.COIN,dataDTOList);
                 }
             }catch (Exception e){
                 log.error("Coin page " + i + " error: " + e.getLocalizedMessage());

@@ -30,14 +30,6 @@ public class AssetService {
         return optional.map(assetEntity -> mapper.map(assetEntity, AssetDTO.class));
     }
 
-    public List<AssetDTO> findByUsername(String username){
-        return assetRepository.findByAssetEmbeddableId_Username(username).stream().map(assetEntity -> mapper.map(assetEntity, AssetDTO.class)).collect(Collectors.toList());
-    }
-
-    public void delete(String username, String code, Type type){
-        assetRepository.deleteById(new AssetEmbeddableId(username,code,type));
-    }
-
     public void saveAll(List<AssetDTO> assetDTOList){
         List<AssetEntity> assetEntityList = new ArrayList<>();
         assetDTOList.forEach(f -> assetEntityList.add(mapper.map(f, AssetEntity.class)));

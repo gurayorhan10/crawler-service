@@ -24,6 +24,8 @@ public class DataEntity {
     private String name;
     @Column(name = "VALUE", nullable = false, precision = 12, scale = 5)
     private BigDecimal value;
+    @Column(name = "DAILY_VALUE", nullable = false, precision = 12, scale = 5)
+    private BigDecimal dailyValue;
     @Enumerated(EnumType.STRING)
     @Column(name = "CURRENCY", nullable = false)
     private Currency currency;

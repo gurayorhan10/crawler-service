@@ -1,5 +1,6 @@
 package com.project.crawlerservice.job;
 
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -12,6 +13,11 @@ public class ScheduledJob {
     @Autowired
     private StarterJob job;
 
+    @PostConstruct
+    void init(){
+        job.run("dailyAssetChange");
+    }
+
     @Scheduled(cron = "0 10 0 * * *")
     public void interestCalculationScheduled(){
         job.run("interestCalculation");
@@ -22,22 +28,24 @@ public class ScheduledJob {
         job.run("coin");
     }
 
-    @Scheduled(cron = "0 */5 9-18 * * 1-5")
+    @Scheduled(cron = "0 55 9 * * 1-5")
+    @Scheduled(cron = "0 */5 10-18 * * 1-5")
+    @Scheduled(cron = "0 0-15/5 18 * * 1-5")
     public void stockScheduled(){
         job.run("stock");
     }
 
-    @Scheduled(cron = "0 */5 * * * *")
+    @Scheduled(cron = "0 */5 * * * 1-5")
     public void mineScheduled(){
         job.run("mine");
     }
 
-    @Scheduled(cron = "0 0 7 * * *")
+    @Scheduled(cron = "0 0 7 * * 1-5")
     public void fundScheduled(){
         job.run("fund");
     }
 
-    @Scheduled(cron = "0 */5 * * * *")
+    @Scheduled(cron = "0 */5 * * * 1-5")
     public void exchangeRateScheduled(){
         job.run("exchangeRate");
     }

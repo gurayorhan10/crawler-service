@@ -42,7 +42,7 @@ public class ExchangeRateTasklet implements Tasklet {
             List<DataDTO> dataDTOList = new ArrayList<>();
             List<ExchangeRateDTO> exchangeRateDTOList = new ArrayList<>();
             exchangeRateDTOList.add(new ExchangeRateDTO(Currency.TL, "Türk Lirası", BigDecimal.ONE, BigDecimal.ONE, new Date()));
-            dataDTOList.add(new DataDTO(Currency.TL.name(), "Türk Lirası", Type.MONEY, BigDecimal.ONE, Currency.TL, Boolean.TRUE, new Date()));
+            dataDTOList.add(new DataDTO(Currency.TL.name(), "Türk Lirası", Type.MONEY, BigDecimal.ONE, BigDecimal.ONE, Currency.TL, Boolean.TRUE, new Date()));
             codes.add(Currency.TL.name());
             Document document = Jsoup.connect(WEB_SITE + "/yatirim/piyasalar/doviz").get();
             Elements tbody = document.getElementsByClass("render-list");
@@ -57,7 +57,7 @@ public class ExchangeRateTasklet implements Tasklet {
                     BigDecimal sell = new BigDecimal(td.get(2).getElementsByTag("span").get(0).childNodes().get(0).toString().trim().replace(",", "")).setScale(5, RoundingMode.HALF_UP);
                     BigDecimal divide = (buy.add(sell)).divide(BigDecimal.valueOf(2), 5, RoundingMode.HALF_UP);
                     exchangeRateDTOList.add(new ExchangeRateDTO(Currency.valueOf(code.trim()), name.trim(), buy, sell, new Date()));
-                    dataDTOList.add(new DataDTO(Currency.valueOf(code.trim()).name(), name.trim(), Type.MONEY, divide, Currency.valueOf(code.trim()), Boolean.TRUE, new Date()));
+                    dataDTOList.add(new DataDTO(Currency.valueOf(code.trim()).name(), name.trim(), Type.MONEY, divide, divide, Currency.valueOf(code.trim()), Boolean.TRUE, new Date()));
                     codes.add(code.trim());
                 } catch (Exception e) {
                     log.error("Exchange rate not exist: " + code.trim());
@@ -66,7 +66,7 @@ public class ExchangeRateTasklet implements Tasklet {
             if (!CollectionUtils.isEmpty(exchangeRateDTOList)) {
                 log.debug("Exchange rate list: " + codes);
                 exchangeRateService.save(exchangeRateDTOList);
-                dataService.save(dataDTOList);
+                dataService.save(Type.MONEY,dataDTOList);
             }
         } catch (Exception e) {
             log.error("Exchange rate page error: " + e.getLocalizedMessage());

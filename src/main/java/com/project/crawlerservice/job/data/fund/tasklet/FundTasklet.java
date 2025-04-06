@@ -1,4 +1,4 @@
-package com.project.crawlerservice.job.fund.tasklet;
+package com.project.crawlerservice.job.data.fund.tasklet;
 
 import com.project.crawlerservice.dto.DataDTO;
 import com.project.crawlerservice.enums.Currency;
@@ -45,7 +45,7 @@ public class FundTasklet implements Tasklet {
                     code = td.get(0).getElementsByClass("font-bold").get(0).childNodes().get(0).toString().trim();
                     String name = td.get(1).getElementsByTag("a").get(0).childNodes().get(0).toString().trim();
                     BigDecimal value = new BigDecimal(td.get(2).getElementsByTag("a").get(0).childNodes().get(0).toString().trim().replace(",", ".")).setScale(5, RoundingMode.HALF_UP);
-                    dataDTOList.add(new DataDTO(code.toUpperCase().trim(),name.trim(),Type.FUND,value,Currency.TL,Boolean.TRUE,new Date()));
+                    dataDTOList.add(new DataDTO(code.toUpperCase().trim(),name.trim(),Type.FUND,value,value,Currency.TL,Boolean.TRUE,new Date()));
                     codes.add(code.trim());
                 }catch (Exception e){
                     log.error("Fund " + code + " parse error: " + e.getLocalizedMessage());
@@ -53,7 +53,7 @@ public class FundTasklet implements Tasklet {
             }
             if(!CollectionUtils.isEmpty(dataDTOList)){
                 log.debug("Fund list: " + codes);
-                dataService.save(dataDTOList);
+                dataService.save(Type.FUND,dataDTOList);
             }
         }catch (Exception e){
             log.error("Fund page error: " + e.getLocalizedMessage());

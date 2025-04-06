@@ -1,4 +1,4 @@
-package com.project.crawlerservice.job.mine.tasklet;
+package com.project.crawlerservice.job.data.mine.tasklet;
 
 import com.project.crawlerservice.dto.DataDTO;
 import com.project.crawlerservice.enums.Currency;
@@ -34,8 +34,10 @@ public class MineTasklet implements Tasklet {
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext){
         try {
-            List<String> codes = new ArrayList<>();
-            List<DataDTO> dataDTOList = new ArrayList<>();
+            List<String> goldCodes = new ArrayList<>();
+            List<String> silverCodes = new ArrayList<>();
+            List<DataDTO> goldDataDTOList = new ArrayList<>();
+            List<DataDTO> silverDataDTOList = new ArrayList<>();
             Document document = Jsoup.connect(WEB_SITE + "/yatirim-araclari/altin-fiyatlari").get();
             Elements tbody = document.getElementsByClass("odd:bg-white even:bg-purple-100");
             for (Element element : tbody) {
@@ -48,19 +50,23 @@ public class MineTasklet implements Tasklet {
                     BigDecimal sell = new BigDecimal(td.get(2).getElementsByTag("span").get(0).childNodes().get(0).toString().trim().replace(".","").replace(",",".")).setScale(5, RoundingMode.HALF_UP);
                     BigDecimal divide = (buy.add(sell)).divide(BigDecimal.valueOf(2), 5, RoundingMode.HALF_UP);
                     if(!code.equals("GRAM_GUMUS")){
-                        dataDTOList.add(new DataDTO(code,name.trim(), Type.GOLD, divide,Currency.TL,Boolean.TRUE,new Date()));
-                        codes.add(code);
+                        goldDataDTOList.add(new DataDTO(code,name.trim(),Type.GOLD,divide,divide,Currency.TL,Boolean.TRUE,new Date()));
+                        goldCodes.add(code);
                     }else{
-                        dataDTOList.add(new DataDTO(code,name.trim(), Type.SILVER, divide,Currency.TL,Boolean.TRUE,new Date()));
-                        codes.add(code);
+                        silverDataDTOList.add(new DataDTO(code,name.trim(),Type.SILVER,divide,divide,Currency.TL,Boolean.TRUE,new Date()));
+                        silverCodes.add(code);
                     }
                 }catch (Exception e){
                     log.error("Mine " + code + " parse error: " + e.getLocalizedMessage());
                 }
             }
-            if(!CollectionUtils.isEmpty(dataDTOList)){
-                log.debug("Mine list: " + codes);
-                dataService.save(dataDTOList);
+            if(!CollectionUtils.isEmpty(goldDataDTOList)){
+                log.debug("Gold list: " + goldCodes);
+                dataService.save(Type.GOLD,goldDataDTOList);
+            }
+            if(!CollectionUtils.isEmpty(silverDataDTOList)){
+                log.debug("Silver list: " + silverCodes);
+                dataService.save(Type.SILVER,silverDataDTOList);
             }
         }catch (Exception e){
             log.error("Mine page error: " + e.getLocalizedMessage());

@@ -1,7 +1,7 @@
-package com.project.crawlerservice.job.mine;
+package com.project.crawlerservice.job.data.mine;
 
 import com.project.crawlerservice.job.BaseJob;
-import com.project.crawlerservice.job.mine.tasklet.MineTasklet;
+import com.project.crawlerservice.job.data.mine.tasklet.MineTasklet;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;

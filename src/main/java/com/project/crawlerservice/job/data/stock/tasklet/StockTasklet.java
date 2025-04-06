@@ -1,4 +1,4 @@
-package com.project.crawlerservice.job.stock.tasklet;
+package com.project.crawlerservice.job.data.stock.tasklet;
 
 import com.project.crawlerservice.dto.DataDTO;
 import com.project.crawlerservice.enums.Currency;
@@ -49,7 +49,7 @@ public class StockTasklet implements Tasklet {
                         code = td.get(0).getElementsByClass("font-bold").get(0).childNodes().get(0).toString();
                         String name = td.get(0).getElementsByClass("text-ellipses line-clamp-1 text-sm").get(0).childNodes().get(0).toString();
                         BigDecimal value = new BigDecimal(td.get(1).getElementsByClass("lastPrice").get(0).childNodes().get(0).toString().trim().replace(".", "").replace(",", ".")).setScale(5, RoundingMode.HALF_UP);
-                        dataDTOList.add(new DataDTO(code.toUpperCase().trim(),name.trim(),Type.STOCK,value,Currency.TL,Boolean.TRUE,new Date()));
+                        dataDTOList.add(new DataDTO(code.toUpperCase().trim(),name.trim(),Type.STOCK,value,value,Currency.TL,Boolean.TRUE,new Date()));
                         codes.add(code.trim());
                     }catch (Exception e){
                         log.error("Stock " + code + " parse error: " + e.getLocalizedMessage());
@@ -57,7 +57,7 @@ public class StockTasklet implements Tasklet {
                 }
                 if(!CollectionUtils.isEmpty(dataDTOList)){
                     log.debug("Stock page " + i + " list: " + codes);
-                    dataService.save(dataDTOList);
+                    dataService.save(Type.STOCK,dataDTOList);
                 }
             }catch (Exception e){
                 log.error("Stock page " + i + " error: " + e.getLocalizedMessage());

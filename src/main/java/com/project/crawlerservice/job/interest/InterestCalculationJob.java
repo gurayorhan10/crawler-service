@@ -23,7 +23,7 @@ import javax.sql.DataSource;
 public class InterestCalculationJob extends BaseJob {
 
     @Bean(name = "interestCalculation")
-    public Job coinJob(DataSource dataSource) {
+    public Job interestCalculationJob(DataSource dataSource) {
         setDataSource(dataSource);
         return getJobBuilder("interestCalculationJob")
                 .incrementer(new RunIdIncrementer())
@@ -48,7 +48,7 @@ public class InterestCalculationJob extends BaseJob {
         interestDTOJdbcCursorItemReaderBuilder.fetchSize(1000);
         interestDTOJdbcCursorItemReaderBuilder.saveState(false);
         interestDTOJdbcCursorItemReaderBuilder.dataSource(getDataSource());
-        interestDTOJdbcCursorItemReaderBuilder.sql("SELECT DISTINCT(I.USERNAME) FROM DEV.INTEREST I WHERE DATEDIFF(I.FUTURE_CALCULATION_DATE,CURDATE()) <= 0 AND DATEDIFF(I.CALCULATION_DATE,I.FUTURE_CALCULATION_DATE) != 0");
+        interestDTOJdbcCursorItemReaderBuilder.sql("SELECT DISTINCT(I.USERNAME) FROM INTEREST I WHERE DATEDIFF(I.FUTURE_CALCULATION_DATE,CURDATE()) <= 0 AND DATEDIFF(I.CALCULATION_DATE,I.FUTURE_CALCULATION_DATE) != 0");
         interestDTOJdbcCursorItemReaderBuilder.rowMapper(new BeanPropertyRowMapper<>(InterestCalculationProcessorDTO.class));
         SynchronizedItemStreamReader<InterestCalculationProcessorDTO> interestDTOSynchronizedItemStreamReader = new SynchronizedItemStreamReader<>();
         interestDTOSynchronizedItemStreamReader.setDelegate(interestDTOJdbcCursorItemReaderBuilder.build());
