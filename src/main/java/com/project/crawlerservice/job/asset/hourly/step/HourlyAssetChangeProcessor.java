@@ -36,7 +36,7 @@ public class HourlyAssetChangeProcessor implements ItemProcessor<HourlyAssetChan
         List<AssetDataDTO> assetDataDTOList = customService.findAssetDataByUsername(hourlyAssetChangeProcessorDTO.getUsername());
         EmailSendMessage emailSendMessage = new EmailSendMessage();
         emailSendMessage.setTo(hourlyAssetChangeProcessorDTO.getMail());
-        emailSendMessage.setTitle(new SimpleDateFormat("dd.MM.yyyy HH:mm").format(DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH)) + " Saatlik Varlık Değişim Raporu");
+        emailSendMessage.setTitle(new SimpleDateFormat("dd.MM.yyyy HH:mm").format(new Date()) + " Tarihli Varlık Değişim Raporu");
         emailSendMessage.setContent(generateContent(assetDataDTOList));
         emailSendMessage.setSimple(Boolean.FALSE);
         dailyAssetChangeWriterDTO.setEmailSendMessage(emailSendMessage);
@@ -76,7 +76,7 @@ public class HourlyAssetChangeProcessor implements ItemProcessor<HourlyAssetChan
         htmlContent.append("<div class=\"container\">");
         htmlContent.append("<div class=\"header\">");
         htmlContent.append("<h3>Saatlik Varlık Değişim Raporu</h3>");
-        htmlContent.append("<p><strong>").append(new SimpleDateFormat("dd.MM.yyyy").format(DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH))).append("</strong> tarihli günlük varlık raporunuz aşağıdadır.</p>");
+        htmlContent.append("<p><strong>").append(new SimpleDateFormat("dd.MM.yyyy").format(new Date())).append("</strong> tarihli günlük varlık raporunuz aşağıdadır.</p>");
         htmlContent.append("</div>");
 
         // Tablo

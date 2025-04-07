@@ -30,13 +30,15 @@ public class DailyAssetChangeProcessor implements ItemProcessor<DailyAssetChange
     @Autowired
     private ExchangeRateService exchangeRateService;
 
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+
     @Override
     public DailyAssetChangeWriterDTO process(DailyAssetChangeProcessorDTO dailyAssetChangeProcessorDTO) {
         DailyAssetChangeWriterDTO dailyAssetChangeWriterDTO = new DailyAssetChangeWriterDTO();
         List<AssetDataDTO> assetDataDTOList = customService.findAssetDataByUsername(dailyAssetChangeProcessorDTO.getUsername());
         EmailSendMessage emailSendMessage = new EmailSendMessage();
         emailSendMessage.setTo(dailyAssetChangeProcessorDTO.getMail());
-        emailSendMessage.setTitle("Günlük Varlık Değişim Raporu");
+        emailSendMessage.setTitle(dateFormat.format(new Date()) + "Tarihli Varlık Değişim Raporu");
         emailSendMessage.setContent(generateContent(assetDataDTOList));
         emailSendMessage.setSimple(Boolean.FALSE);
         dailyAssetChangeWriterDTO.setEmailSendMessage(emailSendMessage);
@@ -46,7 +48,7 @@ public class DailyAssetChangeProcessor implements ItemProcessor<DailyAssetChange
     private String generateContent(List<AssetDataDTO> changes){
         BigDecimal totalAmount = BigDecimal.ZERO;
         StringBuilder htmlContent = new StringBuilder();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+
 
         // HTML Başlangıcı
         htmlContent.append("<!DOCTYPE html>");
@@ -76,7 +78,7 @@ public class DailyAssetChangeProcessor implements ItemProcessor<DailyAssetChange
         htmlContent.append("<div class=\"container\">");
         htmlContent.append("<div class=\"header\">");
         htmlContent.append("<h3>Günlük Varlık Değişim Raporu</h3>");
-        htmlContent.append("<p><strong>").append(dateFormat.format(DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH))).append("</strong> tarihli günlük varlık raporunuz aşağıdadır.</p>");
+        htmlContent.append("<p><strong>").append(dateFormat.format(new Date())).append("</strong> tarihli günlük varlık raporunuz aşağıdadır.</p>");
         htmlContent.append("</div>");
 
         // Tablo
