@@ -65,7 +65,7 @@ public class DailyAssetChangeProcessor implements ItemProcessor<DailyAssetChange
         htmlContent.append(".header h3 { color: black; font-size: 28px; margin: 0; }");
         htmlContent.append(".header p { color: black; font-size: 16px; margin-top: 5px; }");
         htmlContent.append(".table-container { margin-top: 1px; }");
-        htmlContent.append("table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }");
+        htmlContent.append("table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }");
         htmlContent.append("th, td { padding: 12px; text-align: center; border: 1px solid #ddd; white-space: nowrap; }");
         htmlContent.append("td { color: gray; }");
         htmlContent.append("th { background-color: #007bff; color: white; font-weight: bold; }");
