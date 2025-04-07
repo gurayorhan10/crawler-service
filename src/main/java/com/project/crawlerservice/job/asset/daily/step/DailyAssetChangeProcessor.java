@@ -46,7 +46,8 @@ public class DailyAssetChangeProcessor implements ItemProcessor<DailyAssetChange
     }
 
     private String generateContent(List<AssetDataDTO> changes){
-        BigDecimal totalAmount = BigDecimal.ZERO;
+        BigDecimal firstTotalAmount = BigDecimal.ZERO;
+        BigDecimal lastTotalAmount = BigDecimal.ZERO;
         StringBuilder htmlContent = new StringBuilder();
 
 
@@ -64,7 +65,7 @@ public class DailyAssetChangeProcessor implements ItemProcessor<DailyAssetChange
         htmlContent.append(".header h3 { color: black; font-size: 28px; margin: 0; }");
         htmlContent.append(".header p { color: black; font-size: 16px; margin-top: 5px; }");
         htmlContent.append(".table-container { margin-top: 1px; }");
-        htmlContent.append("table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }");
+        htmlContent.append("table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }");
         htmlContent.append("th, td { padding: 12px; text-align: center; border: 1px solid #ddd; white-space: nowrap; }");
         htmlContent.append("td { color: gray; }");
         htmlContent.append("th { background-color: #007bff; color: white; font-weight: bold; }");
@@ -97,17 +98,52 @@ public class DailyAssetChangeProcessor implements ItemProcessor<DailyAssetChange
         for (AssetDataDTO change : changes) {
             ExchangeRateDTO exchangeRateDTOData = exchangeRateService.findByExchangeRate(change.getDataCurrency()).orElse(new ExchangeRateDTO(Currency.TL,Currency.TL.name(),BigDecimal.ONE,BigDecimal.ONE,new Date()));
             ExchangeRateDTO exchangeRateDTOAsset = exchangeRateService.findByExchangeRate(change.getAssetCurrency()).orElse(new ExchangeRateDTO(Currency.TL,Currency.TL.name(),BigDecimal.ONE,BigDecimal.ONE,new Date()));
-            String row = getRow(change, exchangeRateDTOAsset, exchangeRateDTOData);
-            totalAmount = totalAmount.add(change.getPiece().multiply(change.getValue().multiply(exchangeRateDTOData.getBuy())));
+            BigDecimal first = change.getPiece().multiply(change.getAverage().multiply(exchangeRateDTOAsset.getBuy())).setScale(2, RoundingMode.HALF_UP);
+            BigDecimal last = change.getPiece().multiply(change.getValue().multiply(exchangeRateDTOData.getBuy())).setScale(2, RoundingMode.HALF_UP);
+            firstTotalAmount = firstTotalAmount.add(first);
+            lastTotalAmount = lastTotalAmount.add(last);
+
+            String row = String.format("""
+                    <tr>
+                        <td style="text-align: left;">%s</td>
+                        <td style="text-align: right;">%s</td>
+                        <td style="text-align: right;">%s</td>
+                        <td style="font-weight: bold; color:%s; text-align: right;">%s</td>
+                        <td style="text-align: right;">%s</td>
+                    </tr>
+                """,
+                    change.getName(),
+                    first,
+                    last,
+                    first.compareTo(last) > 0 ? "red" : first.compareTo(last) == 0 ? "gray" : "green",
+                    last.subtract(first).setScale(2,RoundingMode.HALF_UP),
+                    Currency.TL.name());
             htmlContent.append(row);
         }
+
+        String totalRow = String.format("""
+                    <tr>
+                        <td style="text-align: left;">%s</td>
+                        <td style="text-align: right;">%s</td>
+                        <td style="text-align: right;">%s</td>
+                        <td style="font-weight: bold; color:%s; text-align: right;">%s</td>
+                        <td style="text-align: right;">%s</td>
+                    </tr>
+                """,
+                "Toplam",
+                firstTotalAmount,
+                lastTotalAmount,
+                firstTotalAmount.compareTo(lastTotalAmount) > 0 ? "red" : firstTotalAmount.compareTo(lastTotalAmount) == 0 ? "gray" : "green",
+                lastTotalAmount.subtract(firstTotalAmount).setScale(2,RoundingMode.HALF_UP),
+                Currency.TL.name());
+        htmlContent.append(totalRow);
 
         htmlContent.append("</tbody>");
         htmlContent.append("</table>");
 
         // Toplam Varlık
         htmlContent.append("<div class=\"total-assets\">");
-        htmlContent.append("<p>Toplam Varlık: ").append(totalAmount.setScale(2, RoundingMode.HALF_UP)).append(" ").append(Currency.TL.name()).append("</p>");
+        htmlContent.append("<p>Toplam Varlık: ").append(lastTotalAmount.setScale(2, RoundingMode.HALF_UP)).append(" ").append(Currency.TL.name()).append("</p>");
         htmlContent.append("</div>");
 
         htmlContent.append("</div>");
