@@ -18,6 +18,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 @Slf4j
 @Component
@@ -35,7 +36,7 @@ public class CoinScheduled {
         List<CoinMarketDTO> coinMarketDTOList = new ArrayList<>();
         coinMarketDTOList.addAll(coinGeckoClient.getCoins("try",250,1));
         coinMarketDTOList.addAll(coinGeckoClient.getCoins("try",250,2));
-        coinMarketDTOList.forEach(coinMarketDTO -> dataDTOList.add(new DataDTO(coinMarketDTO.getSymbol().toUpperCase(),coinMarketDTO.getName(),Type.COIN,coinMarketDTO.getCurrent_price(),coinMarketDTO.getCurrent_price(),Currency.TL,Boolean.TRUE,new Date())));
+        coinMarketDTOList.forEach(coinMarketDTO -> dataDTOList.add(new DataDTO(coinMarketDTO.getSymbol().toUpperCase(Locale.ENGLISH),coinMarketDTO.getName(),Type.COIN,coinMarketDTO.getCurrent_price(),coinMarketDTO.getCurrent_price(),Currency.TL,Boolean.TRUE,new Date())));
         if(!CollectionUtils.isEmpty(dataDTOList)){
             dataService.save(Type.COIN,dataDTOList);
         }
