@@ -89,7 +89,7 @@ public class DailyAssetChangeProcessor implements ItemProcessor<DailyAssetChange
         htmlContent.append("<th>Varlık Türü</th>");
         htmlContent.append("<th>Başlangıç Değeri</th>");
         htmlContent.append("<th>Mevcut Değeri</th>");
-        htmlContent.append("<th>Değişim Oranı</th>");
+        htmlContent.append("<th>Fark</th>");
         htmlContent.append("</tr>");
         htmlContent.append("</thead>");
         htmlContent.append("<tbody>");
@@ -98,19 +98,7 @@ public class DailyAssetChangeProcessor implements ItemProcessor<DailyAssetChange
         for (AssetDataDTO change : changes) {
             ExchangeRateDTO exchangeRateDTOData = exchangeRateService.findByExchangeRate(change.getDataCurrency()).orElse(new ExchangeRateDTO(Currency.TL,Currency.TL.name(),BigDecimal.ONE,BigDecimal.ONE,new Date()));
             ExchangeRateDTO exchangeRateDTOAsset = exchangeRateService.findByExchangeRate(change.getAssetCurrency()).orElse(new ExchangeRateDTO(Currency.TL,Currency.TL.name(),BigDecimal.ONE,BigDecimal.ONE,new Date()));
-            String row = String.format("""
-                        <tr>
-                            <td style="width: 150px;">%s</td>
-                            <td style="text-align: right; width: 100px;">%s</td>
-                            <td style="text-align: right; width: 100px;">%s</td>
-                            <td style="font-weight: bold; color:%s; text-align: right; width: 25px;">%s</td>
-                        </tr>
-                    """,
-                    change.getName(),
-                    change.getPiece().multiply(change.getAverage().multiply(exchangeRateDTOAsset.getBuy())).setScale(2, RoundingMode.HALF_UP) + " " + Currency.TL.name(),
-                    change.getPiece().multiply(change.getDailyValue().multiply(exchangeRateDTOData.getBuy())).setScale(2, RoundingMode.HALF_UP) + " " + Currency.TL.name(),
-                    change.getAverage().compareTo(change.getDailyValue()) > 0 ? "red" : change.getAverage().compareTo(change.getDailyValue()) == 0 ? "gray" : "green",
-                    change.getDailyValue().subtract(change.getAverage()).setScale(1, RoundingMode.HALF_UP) + "%");
+            String row = getRow(change, exchangeRateDTOAsset, exchangeRateDTOData);
             totalAmount = totalAmount.add(change.getPiece().multiply(change.getDailyValue().multiply(exchangeRateDTOData.getBuy())));
             htmlContent.append(row);
         }
@@ -136,6 +124,25 @@ public class DailyAssetChangeProcessor implements ItemProcessor<DailyAssetChange
         htmlContent.append("</body>");
         htmlContent.append("</html>");
         return htmlContent.toString();
+    }
+
+    private static String getRow(AssetDataDTO change, ExchangeRateDTO exchangeRateDTOAsset, ExchangeRateDTO exchangeRateDTOData) {
+        BigDecimal first = change.getPiece().multiply(change.getAverage().multiply(exchangeRateDTOAsset.getBuy())).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal last = change.getPiece().multiply(change.getDailyValue().multiply(exchangeRateDTOData.getBuy())).setScale(2, RoundingMode.HALF_UP);
+
+        return String.format("""
+                    <tr>
+                        <td style="width: 150px;">%s</td>
+                        <td style="text-align: right; width: 100px;">%s</td>
+                        <td style="text-align: right; width: 100px;">%s</td>
+                        <td style="font-weight: bold; color:%s; text-align: right; width: 25px;">%s</td>
+                    </tr>
+                """,
+                change.getName(),
+                first + " " + Currency.TL.name(),
+                last + " " + Currency.TL.name(),
+                first.compareTo(last) > 0 ? "red" : first.compareTo(last) == 0 ? "gray" : "green",
+                last.subtract(first).setScale(2,RoundingMode.HALF_UP) + " " + Currency.TL.name());
     }
 
 }
