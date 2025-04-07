@@ -33,7 +33,7 @@ public class HourlyAssetChangeProcessor implements ItemProcessor<HourlyAssetChan
     @Override
     public HourlyAssetChangeWriterDTO process(HourlyAssetChangeProcessorDTO hourlyAssetChangeProcessorDTO) {
         HourlyAssetChangeWriterDTO dailyAssetChangeWriterDTO = new HourlyAssetChangeWriterDTO();
-        List<AssetDataDTO> assetDataDTOList = customService.findAssetDataByUsername(hourlyAssetChangeProcessorDTO.getUsername());
+        List<AssetDataDTO> assetDataDTOList = customService.findAssetDataHourlyByUsername(hourlyAssetChangeProcessorDTO.getUsername());
         EmailSendMessage emailSendMessage = new EmailSendMessage();
         emailSendMessage.setTo(hourlyAssetChangeProcessorDTO.getMail());
         emailSendMessage.setTitle(new SimpleDateFormat("dd.MM.yyyy HH:mm").format(new Date()) + " Tarihli Varlık Değişim Raporu");
@@ -46,7 +46,6 @@ public class HourlyAssetChangeProcessor implements ItemProcessor<HourlyAssetChan
     private String generateContent(List<AssetDataDTO> changes){
         BigDecimal totalAmount = BigDecimal.ZERO;
         StringBuilder htmlContent = new StringBuilder();
-
 
         // HTML Başlangıcı
         htmlContent.append("<!DOCTYPE html>");
@@ -97,7 +96,7 @@ public class HourlyAssetChangeProcessor implements ItemProcessor<HourlyAssetChan
             ExchangeRateDTO exchangeRateDTOData = exchangeRateService.findByExchangeRate(change.getDataCurrency()).orElse(new ExchangeRateDTO(Currency.TL,Currency.TL.name(),BigDecimal.ONE,BigDecimal.ONE,new Date()));
             ExchangeRateDTO exchangeRateDTOAsset = exchangeRateService.findByExchangeRate(change.getAssetCurrency()).orElse(new ExchangeRateDTO(Currency.TL,Currency.TL.name(),BigDecimal.ONE,BigDecimal.ONE,new Date()));
             String row = getRow(change, exchangeRateDTOAsset, exchangeRateDTOData);
-            totalAmount = totalAmount.add(change.getPiece().multiply(change.getDailyValue().multiply(exchangeRateDTOData.getBuy())));
+            totalAmount = totalAmount.add(change.getPiece().multiply(change.getValue().multiply(exchangeRateDTOData.getBuy())));
             htmlContent.append(row);
         }
 
@@ -126,7 +125,7 @@ public class HourlyAssetChangeProcessor implements ItemProcessor<HourlyAssetChan
 
     private static String getRow(AssetDataDTO change, ExchangeRateDTO exchangeRateDTOAsset, ExchangeRateDTO exchangeRateDTOData) {
         BigDecimal first = change.getPiece().multiply(change.getAverage().multiply(exchangeRateDTOAsset.getBuy())).setScale(2, RoundingMode.HALF_UP);
-        BigDecimal last = change.getPiece().multiply(change.getDailyValue().multiply(exchangeRateDTOData.getBuy())).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal last = change.getPiece().multiply(change.getValue().multiply(exchangeRateDTOData.getBuy())).setScale(2, RoundingMode.HALF_UP);
 
         return String.format("""
                     <tr>

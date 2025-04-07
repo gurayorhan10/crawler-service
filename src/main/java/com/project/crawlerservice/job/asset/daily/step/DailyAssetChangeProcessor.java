@@ -35,7 +35,7 @@ public class DailyAssetChangeProcessor implements ItemProcessor<DailyAssetChange
     @Override
     public DailyAssetChangeWriterDTO process(DailyAssetChangeProcessorDTO dailyAssetChangeProcessorDTO) {
         DailyAssetChangeWriterDTO dailyAssetChangeWriterDTO = new DailyAssetChangeWriterDTO();
-        List<AssetDataDTO> assetDataDTOList = customService.findAssetDataByUsername(dailyAssetChangeProcessorDTO.getUsername());
+        List<AssetDataDTO> assetDataDTOList = customService.findAssetDataDailyByUsername(dailyAssetChangeProcessorDTO.getUsername());
         EmailSendMessage emailSendMessage = new EmailSendMessage();
         emailSendMessage.setTo(dailyAssetChangeProcessorDTO.getMail());
         emailSendMessage.setTitle(dateFormat.format(new Date()) + "Tarihli Varlık Değişim Raporu");
@@ -99,7 +99,7 @@ public class DailyAssetChangeProcessor implements ItemProcessor<DailyAssetChange
             ExchangeRateDTO exchangeRateDTOData = exchangeRateService.findByExchangeRate(change.getDataCurrency()).orElse(new ExchangeRateDTO(Currency.TL,Currency.TL.name(),BigDecimal.ONE,BigDecimal.ONE,new Date()));
             ExchangeRateDTO exchangeRateDTOAsset = exchangeRateService.findByExchangeRate(change.getAssetCurrency()).orElse(new ExchangeRateDTO(Currency.TL,Currency.TL.name(),BigDecimal.ONE,BigDecimal.ONE,new Date()));
             String row = getRow(change, exchangeRateDTOAsset, exchangeRateDTOData);
-            totalAmount = totalAmount.add(change.getPiece().multiply(change.getDailyValue().multiply(exchangeRateDTOData.getBuy())));
+            totalAmount = totalAmount.add(change.getPiece().multiply(change.getValue().multiply(exchangeRateDTOData.getBuy())));
             htmlContent.append(row);
         }
 
@@ -128,7 +128,7 @@ public class DailyAssetChangeProcessor implements ItemProcessor<DailyAssetChange
 
     private static String getRow(AssetDataDTO change, ExchangeRateDTO exchangeRateDTOAsset, ExchangeRateDTO exchangeRateDTOData) {
         BigDecimal first = change.getPiece().multiply(change.getAverage().multiply(exchangeRateDTOAsset.getBuy())).setScale(2, RoundingMode.HALF_UP);
-        BigDecimal last = change.getPiece().multiply(change.getDailyValue().multiply(exchangeRateDTOData.getBuy())).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal last = change.getPiece().multiply(change.getValue().multiply(exchangeRateDTOData.getBuy())).setScale(2, RoundingMode.HALF_UP);
 
         return String.format("""
                     <tr>
