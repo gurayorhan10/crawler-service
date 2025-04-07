@@ -29,7 +29,7 @@ public class CoinScheduled {
     @Autowired
     private CoinGeckoClient coinGeckoClient;
 
-    @Scheduled(cron = "0 10 1 * * *")
+
     @Scheduled(cron = "*/30 * * * * *")
     public void coinScheduled(){
         List<DataDTO> dataDTOList = new ArrayList<>();
