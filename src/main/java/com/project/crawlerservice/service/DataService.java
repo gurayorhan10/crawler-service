@@ -2,16 +2,13 @@ package com.project.crawlerservice.service;
 
 import com.project.crawlerservice.dto.DataDTO;
 import com.project.crawlerservice.entity.DataEntity;
-import com.project.crawlerservice.entity.DataHistoryEntity;
 import com.project.crawlerservice.enums.Type;
-import com.project.crawlerservice.repository.DataHistoryRepository;
 import com.project.crawlerservice.repository.DataRepository;
 import org.apache.commons.lang.time.DateUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,11 +21,7 @@ public class DataService {
     @Autowired
     private DataRepository dataRepository;
 
-    @Autowired
-    private DataHistoryRepository dataHistoryRepository;
-
     public void save(Type type, List<DataDTO> dataDTOList){
-        List<DataHistoryEntity> dataHistoryEntityList = new ArrayList<>();
         List<DataEntity> dataEntityList = dataRepository.findByDataEmbeddableId_CodeInAndDataEmbeddableId_Type(dataDTOList.stream().map(DataDTO::getCode).toList(),type);
         dataDTOList.forEach(dataDTO -> {
             Optional<DataEntity> dataEntity = dataEntityList.stream().filter(f -> dataDTO.getCode().equals(f.getDataEmbeddableId().getCode()) & dataDTO.getType().equals(type)).findFirst();
@@ -42,9 +35,7 @@ public class DataService {
                 dataEntityList.add(mapper.map(dataDTO, DataEntity.class));
             }
         });
-        dataRepository.saveAll(dataEntityList).forEach(dataEntity -> dataHistoryEntityList
-                .add(new DataHistoryEntity(null,dataEntity.getDataEmbeddableId().getCode(),dataEntity.getDataEmbeddableId().getType(),dataEntity.getValue(), dataEntity.getLastUpdateDate())));
-        dataHistoryRepository.saveAll(dataHistoryEntityList);
+        dataRepository.saveAll(dataEntityList);
     }
 
 }
