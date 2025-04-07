@@ -5,12 +5,7 @@ public enum Currency {
     EUR,
     GBP,
     CHF,
-
     JPY,
-    XAU,
-    XAG,
-    XPT,
-    XPD,
     DKK,
     RUB,
     AED,
