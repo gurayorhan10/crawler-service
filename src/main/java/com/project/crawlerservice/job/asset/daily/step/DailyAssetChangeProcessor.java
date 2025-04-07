@@ -63,7 +63,7 @@ public class DailyAssetChangeProcessor implements ItemProcessor<DailyAssetChange
         htmlContent.append(".header { text-align: center; margin-bottom: 20px; }");
         htmlContent.append(".header h3 { color: black; font-size: 28px; margin: 0; }");
         htmlContent.append(".header p { color: black; font-size: 16px; margin-top: 5px; }");
-        htmlContent.append(".table-container { margin-top: 15px; }");
+        htmlContent.append(".table-container { margin-top: 1px; }");
         htmlContent.append("table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }");
         htmlContent.append("th, td { padding: 12px; text-align: center; border: 1px solid #ddd; white-space: nowrap; }");
         htmlContent.append("td { color: gray; }");
@@ -85,9 +85,10 @@ public class DailyAssetChangeProcessor implements ItemProcessor<DailyAssetChange
         htmlContent.append("<thead>");
         htmlContent.append("<tr>");
         htmlContent.append("<th>Varlık Türü</th>");
-        htmlContent.append("<th>Başlangıç Değeri</th>");
-        htmlContent.append("<th>Mevcut Değeri</th>");
+        htmlContent.append("<th>Başlangıç</th>");
+        htmlContent.append("<th>Mevcut</th>");
         htmlContent.append("<th>Fark</th>");
+        htmlContent.append("<th>Döviz Cinsi</th>");
         htmlContent.append("</tr>");
         htmlContent.append("</thead>");
         htmlContent.append("<tbody>");
@@ -131,13 +132,15 @@ public class DailyAssetChangeProcessor implements ItemProcessor<DailyAssetChange
                         <td style="text-align: right;">%s</td>
                         <td style="text-align: right;">%s</td>
                         <td style="font-weight: bold; color:%s; text-align: right;">%s</td>
+                        <td style="text-align: right;">%s</td>
                     </tr>
                 """,
                 change.getName(),
-                first + " " + Currency.TL.name(),
-                last + " " + Currency.TL.name(),
+                first,
+                last,
                 first.compareTo(last) > 0 ? "red" : first.compareTo(last) == 0 ? "gray" : "green",
-                last.subtract(first).setScale(2,RoundingMode.HALF_UP) + " " + Currency.TL.name());
+                last.subtract(first).setScale(2,RoundingMode.HALF_UP),
+                Currency.TL.name());
     }
 
 }
