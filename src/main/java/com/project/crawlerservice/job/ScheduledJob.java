@@ -22,6 +22,11 @@ public class ScheduledJob {
         job.run("dailyAssetChange");
     }
 
+    @Scheduled(cron = "0 0 1-23 * * *")
+    public void hourlyAssetChangeScheduled(){
+        job.run("hourlyAssetChange");
+    }
+
     @Scheduled(cron = "0 */2 * * * *")
     public void coinScheduled(){
         job.run("coin");
