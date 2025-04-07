@@ -52,13 +52,13 @@ public class InterestDTO {
     @JsonProperty
     @NotNull
     private Boolean again;
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy.MM.dd HH:mm:ss")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Date createDate;
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy.MM.dd HH:mm:ss")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Date calculationDate;
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy.MM.dd HH:mm:ss")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Date futureCalculationDate;
 }

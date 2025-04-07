@@ -26,6 +26,6 @@ public class ExchangeRateDTO {
     private BigDecimal buy;
     @JsonProperty
     private BigDecimal sell;
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy.MM.dd HH:mm:ss")
     private Date lastUpdateDate;
 }
