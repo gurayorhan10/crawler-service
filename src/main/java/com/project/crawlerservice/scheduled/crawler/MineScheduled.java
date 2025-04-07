@@ -30,6 +30,7 @@ public class MineScheduled {
     @Autowired
     private DataService dataService;
 
+    @Scheduled(cron = "0 10 1 * * *")
     @Scheduled(cron = "0 */5 * * * 1-5")
     public void mineScheduled(){
         try {

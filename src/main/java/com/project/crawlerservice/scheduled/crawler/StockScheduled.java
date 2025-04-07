@@ -30,6 +30,7 @@ public class StockScheduled {
     @Autowired
     private DataService dataService;
 
+    @Scheduled(cron = "0 10 1 * * *")
     @Scheduled(cron = "0 50 9 * * 1-5")
     @Scheduled(cron = "0 */5 10-19 * * 1-5")
     public void stockScheduled(){
