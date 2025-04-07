@@ -1,10 +1,10 @@
-package com.project.crawlerservice.job.asset.step;
+package com.project.crawlerservice.job.asset.hourly.step;
 
 import com.project.crawlerservice.dto.AssetDataDTO;
 import com.project.crawlerservice.dto.ExchangeRateDTO;
 import com.project.crawlerservice.enums.Currency;
-import com.project.crawlerservice.job.asset.dto.DailyAssetChangeProcessorDTO;
-import com.project.crawlerservice.job.asset.dto.DailyAssetChangeWriterDTO;
+import com.project.crawlerservice.job.asset.hourly.dto.HourlyAssetChangeProcessorDTO;
+import com.project.crawlerservice.job.asset.hourly.dto.HourlyAssetChangeWriterDTO;
 import com.project.crawlerservice.rabbit.data.EmailSendMessage;
 import com.project.crawlerservice.service.AssetService;
 import com.project.crawlerservice.service.CustomService;
@@ -19,7 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-public class DailyAssetChangeProcessor implements ItemProcessor<DailyAssetChangeProcessorDTO, DailyAssetChangeWriterDTO> {
+public class HourlyAssetChangeProcessor implements ItemProcessor<HourlyAssetChangeProcessorDTO, HourlyAssetChangeWriterDTO> {
 
     @Autowired
     private AssetService assetService;
@@ -31,12 +31,12 @@ public class DailyAssetChangeProcessor implements ItemProcessor<DailyAssetChange
     private ExchangeRateService exchangeRateService;
 
     @Override
-    public DailyAssetChangeWriterDTO process(DailyAssetChangeProcessorDTO dailyAssetChangeProcessorDTO) {
-        DailyAssetChangeWriterDTO dailyAssetChangeWriterDTO = new DailyAssetChangeWriterDTO();
-        List<AssetDataDTO> assetDataDTOList = customService.findAssetDataByUsername(dailyAssetChangeProcessorDTO.getUsername());
+    public HourlyAssetChangeWriterDTO process(HourlyAssetChangeProcessorDTO hourlyAssetChangeProcessorDTO) {
+        HourlyAssetChangeWriterDTO dailyAssetChangeWriterDTO = new HourlyAssetChangeWriterDTO();
+        List<AssetDataDTO> assetDataDTOList = customService.findAssetDataByUsername(hourlyAssetChangeProcessorDTO.getUsername());
         EmailSendMessage emailSendMessage = new EmailSendMessage();
-        emailSendMessage.setTo(dailyAssetChangeProcessorDTO.getMail());
-        emailSendMessage.setTitle("Günlük Varlık Değişim Raporu");
+        emailSendMessage.setTo(hourlyAssetChangeProcessorDTO.getMail());
+        emailSendMessage.setTitle(new SimpleDateFormat("dd.MM.yyyy HH:mm").format(DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH)) + " Saatlik Varlık Değişim Raporu");
         emailSendMessage.setContent(generateContent(assetDataDTOList));
         emailSendMessage.setSimple(Boolean.FALSE);
         dailyAssetChangeWriterDTO.setEmailSendMessage(emailSendMessage);
@@ -46,7 +46,7 @@ public class DailyAssetChangeProcessor implements ItemProcessor<DailyAssetChange
     private String generateContent(List<AssetDataDTO> changes){
         BigDecimal totalAmount = BigDecimal.ZERO;
         StringBuilder htmlContent = new StringBuilder();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+
 
         // HTML Başlangıcı
         htmlContent.append("<!DOCTYPE html>");
@@ -54,7 +54,7 @@ public class DailyAssetChangeProcessor implements ItemProcessor<DailyAssetChange
         htmlContent.append("<head>");
         htmlContent.append("<meta charset=\"UTF-8\">");
         htmlContent.append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">");
-        htmlContent.append("<title>Günlük Varlık Değişim Raporu</title>");
+        htmlContent.append("<title>Saatlik Varlık Değişim Raporu</title>");
         htmlContent.append("<style>");
         htmlContent.append("body { font-family: Arial, sans-serif; background-color: #f4f6f9; color: #333; margin: 0; padding: 0; }");
         htmlContent.append(".container { width: 80%; margin: 30px auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); padding: 20px; }");
@@ -75,8 +75,8 @@ public class DailyAssetChangeProcessor implements ItemProcessor<DailyAssetChange
         // Başlık kısmı
         htmlContent.append("<div class=\"container\">");
         htmlContent.append("<div class=\"header\">");
-        htmlContent.append("<h3>Günlük Varlık Değişim Raporu</h3>");
-        htmlContent.append("<p><strong>").append(dateFormat.format(DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH))).append("</strong> tarihli günlük varlık raporunuz aşağıdadır.</p>");
+        htmlContent.append("<h3>Saatlik Varlık Değişim Raporu</h3>");
+        htmlContent.append("<p><strong>").append(new SimpleDateFormat("dd.MM.yyyy").format(DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH))).append("</strong> tarihli günlük varlık raporunuz aşağıdadır.</p>");
         htmlContent.append("</div>");
 
         // Tablo
@@ -125,7 +125,7 @@ public class DailyAssetChangeProcessor implements ItemProcessor<DailyAssetChange
 
         // Alt Kısım
         htmlContent.append("<div class=\"footer\">");
-        htmlContent.append("<p style=\"font-size: 13px; color: gray;\">Bu e-posta bilgilendirme amaçlıdır. Günlük olarak otomatik gönderilmektedir.</p>");
+        htmlContent.append("<p style=\"font-size: 13px; color: gray;\">Bu e-posta bilgilendirme amaçlıdır. Saatlik olarak otomatik gönderilmektedir.</p>");
 
         htmlContent.append("</div>");
         htmlContent.append("</div>");

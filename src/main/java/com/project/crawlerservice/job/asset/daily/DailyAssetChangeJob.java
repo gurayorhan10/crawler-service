@@ -1,10 +1,10 @@
-package com.project.crawlerservice.job.asset;
+package com.project.crawlerservice.job.asset.daily;
 
 import com.project.crawlerservice.job.BaseJob;
-import com.project.crawlerservice.job.asset.dto.DailyAssetChangeProcessorDTO;
-import com.project.crawlerservice.job.asset.dto.DailyAssetChangeWriterDTO;
-import com.project.crawlerservice.job.asset.step.DailyAssetChangeProcessor;
-import com.project.crawlerservice.job.asset.step.DailyAssetChangeWriter;
+import com.project.crawlerservice.job.asset.daily.dto.DailyAssetChangeProcessorDTO;
+import com.project.crawlerservice.job.asset.daily.dto.DailyAssetChangeWriterDTO;
+import com.project.crawlerservice.job.asset.daily.step.DailyAssetChangeProcessor;
+import com.project.crawlerservice.job.asset.daily.step.DailyAssetChangeWriter;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
@@ -49,7 +49,7 @@ public class DailyAssetChangeJob extends BaseJob {
         dailyAssetChangeProcessorDTOJdbcCursorItemReaderBuilder.fetchSize(1000);
         dailyAssetChangeProcessorDTOJdbcCursorItemReaderBuilder.saveState(false);
         dailyAssetChangeProcessorDTOJdbcCursorItemReaderBuilder.dataSource(getDataSource());
-        dailyAssetChangeProcessorDTOJdbcCursorItemReaderBuilder.sql("SELECT U.USERNAME, U.MAIL FROM USER U WHERE U.ACTIVE = 1 AND (SELECT 1 FROM ASSET A WHERE A.USERNAME = U.USERNAME) = 1;");
+        dailyAssetChangeProcessorDTOJdbcCursorItemReaderBuilder.sql("SELECT U.USERNAME, U.MAIL FROM USER U WHERE U.ACTIVE = 1 AND (SELECT COUNT(*) FROM NOTIFICATION N WHERE U.USERNAME = N.USERNAME AND N.TYPE = 'DAILY') AND (SELECT COUNT(*) FROM ASSET A WHERE A.USERNAME = U.USERNAME) > 0;");
         dailyAssetChangeProcessorDTOJdbcCursorItemReaderBuilder.rowMapper(new BeanPropertyRowMapper<>(DailyAssetChangeProcessorDTO.class));
         SynchronizedItemStreamReader<DailyAssetChangeProcessorDTO> dailyAssetChangeProcessorDTOSynchronizedItemStreamReader = new SynchronizedItemStreamReader<>();
         dailyAssetChangeProcessorDTOSynchronizedItemStreamReader.setDelegate(dailyAssetChangeProcessorDTOJdbcCursorItemReaderBuilder.build());

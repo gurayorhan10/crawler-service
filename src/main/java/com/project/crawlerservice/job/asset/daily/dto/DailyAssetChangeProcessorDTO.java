@@ -1,4 +1,4 @@
-package com.project.crawlerservice.job.asset.dto;
+package com.project.crawlerservice.job.asset.daily.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
