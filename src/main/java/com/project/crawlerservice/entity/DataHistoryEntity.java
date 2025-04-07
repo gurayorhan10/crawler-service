@@ -16,6 +16,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "DATA_HISTORY", indexes = {
+        @Index(name = "CODE_INDEX", columnList = "CODE"),
         @Index(name = "CODE_AND_TYPE_INDEX", columnList = "CODE, TYPE")
 })
 public class DataHistoryEntity {
