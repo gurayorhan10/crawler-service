@@ -12,7 +12,7 @@ public class JobController {
     @Autowired
     private StarterJob starterJob;
 
-    @PostMapping(path = {"/run/{name}"})
+    @GetMapping(path = {"/run/{name}"})
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void run(@PathVariable String name){
         starterJob.run(name);
