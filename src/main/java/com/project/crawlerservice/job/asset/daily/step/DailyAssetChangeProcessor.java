@@ -38,7 +38,7 @@ public class DailyAssetChangeProcessor implements ItemProcessor<DailyAssetChange
         List<AssetDataDTO> assetDataDTOList = customService.findAssetDataDailyByUsername(dailyAssetChangeProcessorDTO.getUsername());
         EmailSendMessage emailSendMessage = new EmailSendMessage();
         emailSendMessage.setTo(dailyAssetChangeProcessorDTO.getMail());
-        emailSendMessage.setTitle(dateFormat.format(new Date()) + "Tarihli Varlık Değişim Raporu");
+        emailSendMessage.setTitle(dateFormat.format(new Date()) + " Tarihli Varlık Değişim Raporu");
         emailSendMessage.setContent(generateContent(assetDataDTOList));
         emailSendMessage.setSimple(Boolean.FALSE);
         dailyAssetChangeWriterDTO.setEmailSendMessage(emailSendMessage);
