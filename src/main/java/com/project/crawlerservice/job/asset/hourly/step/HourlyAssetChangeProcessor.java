@@ -114,7 +114,7 @@ public class HourlyAssetChangeProcessor implements ItemProcessor<HourlyAssetChan
                     change.getName(),
                     first,
                     last,
-                    change.getValue(),
+                    change.getValue().setScale(2,RoundingMode.HALF_UP),
                     first.compareTo(last) > 0 ? "red" : first.compareTo(last) == 0 ? "gray" : "green",
                     last.subtract(first).setScale(2,RoundingMode.HALF_UP),
                     Currency.TL.name());
@@ -126,6 +126,7 @@ public class HourlyAssetChangeProcessor implements ItemProcessor<HourlyAssetChan
                         <td style="text-align: left;">%s</td>
                         <td style="text-align: right;">%s</td>
                         <td style="text-align: right;">%s</td>
+                        <td style="text-align: right;">%s</td>
                         <td style="font-weight: bold; color:%s; text-align: right;">%s</td>
                         <td style="text-align: right;">%s</td>
                     </tr>
@@ -133,6 +134,7 @@ public class HourlyAssetChangeProcessor implements ItemProcessor<HourlyAssetChan
                 "Toplam",
                 firstTotalAmount,
                 lastTotalAmount,
+                BigDecimal.ONE.setScale(2,RoundingMode.HALF_UP),
                 firstTotalAmount.compareTo(lastTotalAmount) > 0 ? "red" : firstTotalAmount.compareTo(lastTotalAmount) == 0 ? "gray" : "green",
                 lastTotalAmount.subtract(firstTotalAmount).setScale(2,RoundingMode.HALF_UP),
                 Currency.TL.name());
