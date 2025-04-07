@@ -44,7 +44,7 @@ public class AssetDTO {
     @NotNull
     @JsonProperty
     private Currency currency;
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy.MM.dd HH:mm:ss")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Date lastUpdateDate;
 }

@@ -33,7 +33,7 @@ public class DataDTO {
     private Currency currency;
     @JsonProperty
     private Boolean active;
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy.MM.dd HH:mm:ss")
     private Date lastUpdateDate;
 }
 
