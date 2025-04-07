@@ -28,7 +28,6 @@ public class FundScheduled {
     @Autowired
     private DataService dataService;
 
-    @Scheduled(cron = "0 10 1 * * *")
     @Scheduled(cron = "0 0 7 * * 1-5")
     public void fundScheduled(){
         try {

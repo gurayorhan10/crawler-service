@@ -24,15 +24,15 @@ import java.util.List;
 @Component
 public class StockScheduled {
 
-    private static final Integer LAST_PAGE = 32;
+    private static final Integer LAST_PAGE = 31;
     private static final String WEB_SITE = "http://www.bloomberght.com";
 
     @Autowired
     private DataService dataService;
 
-    @Scheduled(cron = "0 10 1 * * *")
     @Scheduled(cron = "0 50 9 * * 1-5")
-    @Scheduled(cron = "0 */5 10-19 * * 1-5")
+    @Scheduled(cron = "0 55 9 * * 1-5")
+    @Scheduled(cron = "0 */5 10-18 * * 1-5")
     public void stockScheduled(){
         int i = 1;
         do {

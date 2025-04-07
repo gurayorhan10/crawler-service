@@ -34,7 +34,7 @@ public class ExchangeRateScheduled {
     @Autowired
     private ExchangeRateService exchangeRateService;
 
-    @Scheduled(cron = "0 10 1 * * *")
+
     @Scheduled(cron = "0 */1 * * * 1-5")
     public void exchangeRateScheduled(){
         try {
