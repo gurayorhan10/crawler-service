@@ -34,8 +34,6 @@ public class ExchangeRateScheduled {
     @Autowired
     private ExchangeRateService exchangeRateService;
 
-    private final List<String> ignoredCodes = List.of("XAU", "XAG", "XPT", "XPD");
-
     @Scheduled(cron = "0 */1 * * * 1-5")
     public void exchangeRateScheduled(){
         try {

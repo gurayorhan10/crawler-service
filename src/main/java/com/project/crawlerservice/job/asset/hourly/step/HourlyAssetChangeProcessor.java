@@ -85,6 +85,7 @@ public class HourlyAssetChangeProcessor implements ItemProcessor<HourlyAssetChan
         htmlContent.append("<th>Varlık Türü</th>");
         htmlContent.append("<th>Başlangıç</th>");
         htmlContent.append("<th>Mevcut</th>");
+        htmlContent.append("<th>Anlık Değeri</th>");
         htmlContent.append("<th>Fark</th>");
         htmlContent.append("<th>Döviz Cinsi</th>");
         htmlContent.append("</tr>");
@@ -105,6 +106,7 @@ public class HourlyAssetChangeProcessor implements ItemProcessor<HourlyAssetChan
                         <td style="text-align: left;">%s</td>
                         <td style="text-align: right;">%s</td>
                         <td style="text-align: right;">%s</td>
+                        <td style="text-align: right;">%s</td>
                         <td style="font-weight: bold; color:%s; text-align: right;">%s</td>
                         <td style="text-align: right;">%s</td>
                     </tr>
@@ -112,6 +114,7 @@ public class HourlyAssetChangeProcessor implements ItemProcessor<HourlyAssetChan
                     change.getName(),
                     first,
                     last,
+                    change.getValue(),
                     first.compareTo(last) > 0 ? "red" : first.compareTo(last) == 0 ? "gray" : "green",
                     last.subtract(first).setScale(2,RoundingMode.HALF_UP),
                     Currency.TL.name());
