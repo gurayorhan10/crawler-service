@@ -63,20 +63,18 @@ public class DailyAssetChangeProcessor implements ItemProcessor<DailyAssetChange
         htmlContent.append(".header { text-align: center; margin-bottom: 20px; }");
         htmlContent.append(".header h3 { color: black; font-size: 28px; margin: 0; }");
         htmlContent.append(".header p { color: black; font-size: 16px; margin-top: 5px; }");
-        htmlContent.append(".table-container { margin-top: 30px; }");
+        htmlContent.append(".table-container { margin-top: 15px; }");
         htmlContent.append("table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }");
         htmlContent.append("th, td { padding: 12px; text-align: center; border: 1px solid #ddd; white-space: nowrap; }");
         htmlContent.append("td { color: gray; }");
         htmlContent.append("th { background-color: #007bff; color: white; font-weight: bold; }");
-        htmlContent.append(".total-assets { font-size: 22px; font-weight: bold; color: #007bff; text-align: right; }");
+        htmlContent.append(".total-assets { font-size: 20px; font-weight: bold; color: #007bff; text-align: left; }");
         htmlContent.append(".footer { text-align: center; margin-top: 30px; color: #888; }");
         htmlContent.append("</style>");
         htmlContent.append("</head>");
         htmlContent.append("<body>");
 
         // Başlık kısmı
-        htmlContent.append("<div class=\"container\">");
-        htmlContent.append("<div class=\"header\">");
         htmlContent.append("<h3>Günlük Varlık Değişim Raporu</h3>");
         htmlContent.append("<p><strong>").append(dateFormat.format(new Date())).append("</strong> tarihli günlük varlık raporunuz aşağıdadır.</p>");
         htmlContent.append("</div>");
@@ -117,9 +115,6 @@ public class DailyAssetChangeProcessor implements ItemProcessor<DailyAssetChange
         htmlContent.append("<div class=\"footer\">");
         htmlContent.append("<p style=\"font-size: 13px; color: gray;\">Bu e-posta bilgilendirme amaçlıdır. Günlük olarak otomatik gönderilmektedir.</p>");
 
-        htmlContent.append("</div>");
-        htmlContent.append("</div>");
-
         // HTML Kapanışı
         htmlContent.append("</body>");
         htmlContent.append("</html>");
@@ -132,10 +127,10 @@ public class DailyAssetChangeProcessor implements ItemProcessor<DailyAssetChange
 
         return String.format("""
                     <tr>
-                        <td style="width: 150px;">%s</td>
-                        <td style="text-align: right; width: 100px;">%s</td>
-                        <td style="text-align: right; width: 100px;">%s</td>
-                        <td style="font-weight: bold; color:%s; text-align: right; width: 25px;">%s</td>
+                        <td style="text-align: left;">%s</td>
+                        <td style="text-align: right;">%s</td>
+                        <td style="text-align: right;">%s</td>
+                        <td style="font-weight: bold; color:%s; text-align: right;">%s</td>
                     </tr>
                 """,
                 change.getName(),
