@@ -31,8 +31,7 @@ public class StockScheduled {
     private DataService dataService;
 
     @Scheduled(cron = "0 50 9 * * 1-5")
-    @Scheduled(cron = "0 */5 10-18 * * 1-5")
-    @Scheduled(cron = "0 0-30/5 18 * * 1-5")
+    @Scheduled(cron = "0 */5 10-19 * * 1-5")
     public void stockScheduled(){
         int i = 1;
         do {
