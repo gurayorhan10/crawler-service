@@ -27,31 +27,4 @@ public class ScheduledJob {
         job.run("hourlyAssetChange");
     }
 
-    @Scheduled(cron = "0 */2 * * * *")
-    public void coinScheduled(){
-        job.run("coin");
-    }
-
-    @Scheduled(cron = "0 50 9 * * 1-5")
-    @Scheduled(cron = "0 */5 10-18 * * 1-5")
-    @Scheduled(cron = "0 0-30/5 18 * * 1-5")
-    public void stockScheduled(){
-        job.run("stock");
-    }
-
-    @Scheduled(cron = "0 */5 * * * 1-5")
-    public void mineScheduled(){
-        job.run("mine");
-    }
-
-    @Scheduled(cron = "0 0 7 * * 1-5")
-    public void fundScheduled(){
-        job.run("fund");
-    }
-
-    @Scheduled(cron = "0 */5 * * * 1-5")
-    public void exchangeRateScheduled(){
-        job.run("exchangeRate");
-    }
-
 }

@@ -1,4 +1,4 @@
-package com.project.crawlerservice.job.data.mine.tasklet;
+package com.project.crawlerservice.scheduled.crawler;
 
 import com.project.crawlerservice.dto.DataDTO;
 import com.project.crawlerservice.enums.Currency;
@@ -9,11 +9,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.batch.core.StepContribution;
-import org.springframework.batch.core.scope.context.ChunkContext;
-import org.springframework.batch.core.step.tasklet.Tasklet;
-import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
@@ -24,15 +22,16 @@ import java.util.List;
 import java.util.Locale;
 
 @Slf4j
-public class MineTasklet implements Tasklet {
+@Component
+public class MineScheduled {
 
     private static final String WEB_SITE = "https://www.hangikredi.com";
 
     @Autowired
     private DataService dataService;
 
-    @Override
-    public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext){
+    @Scheduled(cron = "0 */5 * * * 1-5")
+    public void mineScheduled(){
         try {
             List<String> goldCodes = new ArrayList<>();
             List<String> silverCodes = new ArrayList<>();
@@ -50,7 +49,7 @@ public class MineTasklet implements Tasklet {
                     BigDecimal sell = new BigDecimal(td.get(2).getElementsByTag("span").get(0).childNodes().get(0).toString().trim().replace(".","").replace(",",".")).setScale(5, RoundingMode.HALF_UP);
                     BigDecimal divide = (buy.add(sell)).divide(BigDecimal.valueOf(2), 5, RoundingMode.HALF_UP);
                     if(!code.equals("GRAM_GUMUS")){
-                        goldDataDTOList.add(new DataDTO(code,name.trim(),Type.GOLD,divide,divide,Currency.TL,Boolean.TRUE,new Date()));
+                        goldDataDTOList.add(new DataDTO(code,name.trim(), Type.GOLD,divide,divide, Currency.TL,Boolean.TRUE,new Date()));
                         goldCodes.add(code);
                     }else{
                         silverDataDTOList.add(new DataDTO(code,name.trim(),Type.SILVER,divide,divide,Currency.TL,Boolean.TRUE,new Date()));
@@ -71,7 +70,6 @@ public class MineTasklet implements Tasklet {
         }catch (Exception e){
             log.error("Mine page error: " + e.getLocalizedMessage());
         }
-        return RepeatStatus.FINISHED;
     }
 
     public static String getKey(String str){
