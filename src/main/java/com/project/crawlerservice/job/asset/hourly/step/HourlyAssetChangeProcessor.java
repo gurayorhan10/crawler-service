@@ -72,8 +72,6 @@ public class HourlyAssetChangeProcessor implements ItemProcessor<HourlyAssetChan
         htmlContent.append("<body>");
 
         // Başlık kısmı
-        htmlContent.append("<div class=\"container\">");
-        htmlContent.append("<div class=\"header\">");
         htmlContent.append("<h3>Saatlik Varlık Değişim Raporu</h3>");
         htmlContent.append("<p><strong>").append(new SimpleDateFormat("dd.MM.yyyy").format(new Date())).append("</strong> tarihli günlük varlık raporunuz aşağıdadır.</p>");
         htmlContent.append("</div>");
@@ -113,9 +111,6 @@ public class HourlyAssetChangeProcessor implements ItemProcessor<HourlyAssetChan
         // Alt Kısım
         htmlContent.append("<div class=\"footer\">");
         htmlContent.append("<p style=\"font-size: 13px; color: gray;\">Bu e-posta bilgilendirme amaçlıdır. Saatlik olarak otomatik gönderilmektedir.</p>");
-
-        htmlContent.append("</div>");
-        htmlContent.append("</div>");
 
         // HTML Kapanışı
         htmlContent.append("</body>");
