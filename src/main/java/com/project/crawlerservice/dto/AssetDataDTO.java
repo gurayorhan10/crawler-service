@@ -15,6 +15,6 @@ public class AssetDataDTO {
     private BigDecimal piece;
     private BigDecimal average;
     private Currency assetCurrency;
-    private BigDecimal dailyValue;
+    private BigDecimal value;
     private Currency dataCurrency;
 }

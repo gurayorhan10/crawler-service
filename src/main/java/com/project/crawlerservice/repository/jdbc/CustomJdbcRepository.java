@@ -22,12 +22,23 @@ public class CustomJdbcRepository extends NamedParameterJdbcDaoSupport {
         setDataSource(dataSource);
     }
 
-    public List<AssetDataDTO> findAssetDataByUsername(String username){
+    public List<AssetDataDTO> findAssetDataDailyByUsername(String username){
         StringBuilder sql = new StringBuilder();
         MapSqlParameterSource params = new MapSqlParameterSource();
         NamedParameterJdbcTemplate namedParameterJdbcTemplate = getNamedParameterJdbcTemplate();
         sql.append("""
-                    SELECT D.NAME, A.PIECE, A.AVERAGE, A.CURRENCY AS ASSET_CURRENCY, D.DAILY_VALUE, D.CURRENCY AS DATA_CURRENCY FROM ASSET A, DATA D WHERE A.CODE = D.CODE AND A.TYPE = D.TYPE AND A.USERNAME = :username
+                    SELECT D.NAME, A.PIECE, A.AVERAGE, A.CURRENCY AS ASSET_CURRENCY, D.DAILY_VALUE AS VALUE, D.CURRENCY AS DATA_CURRENCY FROM ASSET A, DATA D WHERE A.CODE = D.CODE AND A.TYPE = D.TYPE AND A.USERNAME = :username
+                   """);
+        params.addValue("username",username);
+        return namedParameterJdbcTemplate.query(sql.toString(),params,ASSET_DATA_DTO_ROW_MAPPER);
+    }
+
+    public List<AssetDataDTO> findAssetDataHourlyByUsername(String username){
+        StringBuilder sql = new StringBuilder();
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        NamedParameterJdbcTemplate namedParameterJdbcTemplate = getNamedParameterJdbcTemplate();
+        sql.append("""
+                    SELECT D.NAME, A.PIECE, A.AVERAGE, A.CURRENCY AS ASSET_CURRENCY, D.VALUE, D.CURRENCY AS DATA_CURRENCY FROM ASSET A, DATA D WHERE A.CODE = D.CODE AND A.TYPE = D.TYPE AND A.USERNAME = :username
                    """);
         params.addValue("username",username);
         return namedParameterJdbcTemplate.query(sql.toString(),params,ASSET_DATA_DTO_ROW_MAPPER);

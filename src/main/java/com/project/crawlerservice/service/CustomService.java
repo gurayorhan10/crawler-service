@@ -13,8 +13,12 @@ public class CustomService {
     @Autowired
     private CustomJdbcRepository customJdbcRepository;
 
-    public List<AssetDataDTO> findAssetDataByUsername(String username){
-        return customJdbcRepository.findAssetDataByUsername(username);
+    public List<AssetDataDTO> findAssetDataDailyByUsername(String username){
+        return customJdbcRepository.findAssetDataDailyByUsername(username);
+    }
+
+    public List<AssetDataDTO> findAssetDataHourlyByUsername(String username){
+        return customJdbcRepository.findAssetDataHourlyByUsername(username);
     }
 
 }
