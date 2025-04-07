@@ -32,9 +32,9 @@ public class ScheduledJob {
         job.run("coin");
     }
 
-    @Scheduled(cron = "0 55 9 * * 1-5")
+    @Scheduled(cron = "0 50 9 * * 1-5")
     @Scheduled(cron = "0 */5 10-18 * * 1-5")
-    @Scheduled(cron = "0 0-15/5 18 * * 1-5")
+    @Scheduled(cron = "0 0-30/5 18 * * 1-5")
     public void stockScheduled(){
         job.run("stock");
     }
