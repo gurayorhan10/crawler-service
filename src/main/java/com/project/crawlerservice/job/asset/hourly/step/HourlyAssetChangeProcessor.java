@@ -102,15 +102,15 @@ public class HourlyAssetChangeProcessor implements ItemProcessor<HourlyAssetChan
             lastTotalAmount = lastTotalAmount.add(last);
 
             String row = String.format("""
-                    <tr>
-                        <td style="text-align: left;">%s</td>
-                        <td style="text-align: right;">%s</td>
-                        <td style="text-align: right;">%s</td>
-                        <td style="text-align: right;">%s</td>
-                        <td style="font-weight: bold; color:%s; text-align: right;">%s</td>
-                        <td style="text-align: right;">%s</td>
-                    </tr>
-                """,
+                        <tr>
+                            <td style="text-align: left;">%s</td>
+                            <td style="text-align: right;">%s</td>
+                            <td style="text-align: right;">%s</td>
+                            <td style="text-align: right;">%s</td>
+                            <td style="font-weight: bold; color:%s; text-align: right;">%s</td>
+                            <td style="text-align: right;">%s</td>
+                        </tr>
+                    """,
                     change.getName(),
                     first,
                     last,
@@ -121,6 +121,7 @@ public class HourlyAssetChangeProcessor implements ItemProcessor<HourlyAssetChan
             htmlContent.append(row);
         }
 
+        // Toplam Varlık Tablo
         String totalRow = String.format("""
                     <tr>
                         <td style="text-align: left;">%s</td>
@@ -158,27 +159,6 @@ public class HourlyAssetChangeProcessor implements ItemProcessor<HourlyAssetChan
         htmlContent.append("</body>");
         htmlContent.append("</html>");
         return htmlContent.toString();
-    }
-
-    private static String getRow(AssetDataDTO change, ExchangeRateDTO exchangeRateDTOAsset, ExchangeRateDTO exchangeRateDTOData) {
-        BigDecimal first = change.getPiece().multiply(change.getAverage().multiply(exchangeRateDTOAsset.getBuy())).setScale(2, RoundingMode.HALF_UP);
-        BigDecimal last = change.getPiece().multiply(change.getValue().multiply(exchangeRateDTOData.getBuy())).setScale(2, RoundingMode.HALF_UP);
-
-        return String.format("""
-                    <tr>
-                        <td style="text-align: left;">%s</td>
-                        <td style="text-align: right;">%s</td>
-                        <td style="text-align: right;">%s</td>
-                        <td style="font-weight: bold; color:%s; text-align: right;">%s</td>
-                        <td style="text-align: right;">%s</td>
-                    </tr>
-                """,
-                change.getName(),
-                first,
-                last,
-                first.compareTo(last) > 0 ? "red" : first.compareTo(last) == 0 ? "gray" : "green",
-                last.subtract(first).setScale(2,RoundingMode.HALF_UP),
-                Currency.TL.name());
     }
 
 }
