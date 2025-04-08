@@ -35,7 +35,7 @@ public class ExchangeRateScheduled {
     private ExchangeRateService exchangeRateService;
 
 
-    @Scheduled(cron = "0 */1 * * * 1-5")
+    @Scheduled(cron = "*/30 * * * * 1-5")
     public void exchangeRateScheduled(){
         try {
             List<DataDTO> dataDTOList = new ArrayList<>();
