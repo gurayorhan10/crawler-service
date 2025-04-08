@@ -60,7 +60,7 @@ public class ExchangeRateScheduled {
                             .toString().trim().replace(",", "")).setScale(5, RoundingMode.HALF_UP);
                     BigDecimal divide = (buy.add(sell)).divide(BigDecimal.valueOf(2), 5, RoundingMode.HALF_UP);
                     exchangeRateDTOList.add(new ExchangeRateDTO(currency, name, buy, sell, new Date()));
-                    dataDTOList.add(new DataDTO(currency.name(), name, Type.MONEY, divide, divide, currency, Boolean.TRUE, new Date()));
+                    dataDTOList.add(new DataDTO(currency.name(), name, Type.MONEY, divide, divide, Currency.TL, Boolean.TRUE, new Date()));
                 } catch (Exception e) {
                     log.error("Exchange rate parse error: " + (Objects.isNull(currency) ? "Empty" : currency.name()));
                 }
